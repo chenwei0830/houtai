@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.sys.dao.OrgDao">
+    
+	<select id="get" resultType="Org">
+		SELECT 
+			a.id,
+			a.org_name,
+			a.org_code,
+			a.org_info,
+			a.create_by,
+			a.create_date,
+			a.update_by,
+			a.update_date,
+			a.del_flag
+		FROM sys_org a WHERE a.id=#{id}
+	</select>
+	
+	<select id="findList" resultType="Org">
+		SELECT 
+			a.id,
+			a.org_name,
+			a.org_code,
+			a.org_info,
+			a.create_by,
+			a.create_date,
+			a.update_by,
+			a.update_date,
+			a.del_flag
+		FROM sys_org a WHERE 1=1
+		<if test="orgName!=null and orgName!=''">
+			AND INSTR(a.org_name,#{orgName})<![CDATA[>]]>0 
+		</if>
+		<if test="delFlag!=null and delFlag!=''">
+			AND a.del_flag=#{delFlag}
+		</if>
+		order by a.update_date desc
+	</select>
+	
+	
+	<insert id="insert">
+		INSERT INTO sys_org(
+			id, 
+			org_name, 
+			org_code, 
+			org_info, 
+			create_by, 
+			create_date, 
+			update_by, 
+			update_date, 
+			del_flag
+		) VALUES (
+			#{id}, 
+			#{orgName}, 
+			#{orgCode}, 
+			#{orgInfo}, 
+			#{createBy.id}, 
+			#{createDate}, 
+			#{updateBy.id}, 
+			#{updateDate}, 
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE sys_org SET 
+			org_name = #{orgName}, 
+			org_info = #{orgInfo}, 
+			update_by = #{updateBy.id}, 
+			update_date = #{updateDate}, 
+			del_flag = #{delFlag}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE sys_org SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

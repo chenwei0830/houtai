@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.art.dao.ArtWorksDao">
+    
+	
+	<select id="findList" resultType="ArtWorks">
+		SELECT 
+			a.id,
+			a.art_type AS "artType",
+			a.model_type AS "modelType",
+			a.title,
+			a.user_id AS "user.id",
+			b.nick_name AS "user.nickName",
+			a.status,
+			a.create_by AS "createBy.id",
+			a.create_date AS "createDate",
+			a.update_by AS "updateBy.id",
+			a.update_date AS "updateDate",
+			a.org_id AS "org.id",
+			g.org_name AS "org.orgName"
+		FROM art_works a ,sys_user b,sys_org g
+		<where>
+			a.del_flag=#{DEL_FLAG_NORMAL} and a.user_id = b.id and a.org_id=g.id
+			<if test="user!=null and user.nickName!=null and user.nickName!=''">
+				AND INSTR(b.nick_name,#{user.nickName})<![CDATA[>]]>0
+			</if>
+			<if test="title!=null and title!=''">
+				AND INSTR(a.title,#{title})<![CDATA[>]]>0
+			</if>
+			<if test="beginDate!=null">
+				AND a.update_date<![CDATA[>=]]>#{beginDate}
+			</if>
+			<if test="endDate!=null">
+				AND a.update_date<![CDATA[<]]>#{endDate}+1
+			</if>
+			<if test="artType!=null and artType!=''">
+				AND a.art_type = #{artType}
+			</if>
+			<if test="user!=null and user.id!=null and user.id!=''">
+				AND a.user_id = #{user.id}
+			</if>
+			<if test="org!=null and org.id!=null and org.id!=''">
+				AND a.org_id = #{org.id}
+			</if>
+		</where>  
+		ORDER BY a.update_date DESC
+	</select>
+	
+	<insert id="insert">
+	</insert>
+	
+	<update id="update">
+	</update>
+	
+	<update id="delete">
+	</update>
+	
+</mapper>

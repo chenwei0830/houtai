@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.art.dao.ArtWorksCommentDao">
+    
+	
+	<select id="findList" resultType="ArtWorksComment">
+		SELECT
+			a.id,
+			b.id AS "artWorks.id",
+			b.title AS "artWorks.title",
+			B.art_type AS "artWorks.artType",
+			a.content,
+			a.create_date AS "createDate",
+			c.nick_name AS "user.nickName",
+			c.photo AS "user.photo",
+			a.status ,
+			d.id AS "org.id",
+			d.org_name AS "org.orgName"
+		FROM art_works_comment a ,art_works b,sys_user c,sys_org d 
+		<where>
+			a.del_flag=#{DEL_FLAG_NORMAL} AND a.art_works_id=b.id AND a.create_by=c.id AND b.org_id=d.id
+			<if test="user!=null and user.nickName!=null and user.nickName!=''">
+				AND INSTR(c.nick_name,#{user.nickName})<![CDATA[<>]]>0
+			</if>
+			<if test="artWorks!=null and artWorks.title!=null and artWorks.title!=''">
+				AND INSTR(b.title,#{artWorks.title})<![CDATA[<>]]>0
+			</if>
+			<if test="org!=null and org.id!=null and org.id!=''">
+				AND b.org_id = #{org.id}
+			</if>
+			<if test="status!=null and status!=''">
+				AND a.status = #{status}
+			</if>
+		</where>  
+		ORDER BY  a.status,a.update_date DESC
+	</select>
+	
+	
+	<select id="get" resultType="ArtWorksComment">
+		SELECT
+			a.id,
+			b.id AS "artWorks.id",
+			b.title AS "artWorks.title",
+			B.art_type AS "artWorks.artType",
+			a.content,
+			a.create_date AS "createDate",
+			c.nick_name AS "user.nickName",
+			c.photo AS "user.photo",
+			a.status ,
+			d.id AS "org.id",
+			d.org_name AS "org.orgName"
+		FROM art_works_comment a ,art_works b,sys_user c,sys_org d 
+		<where>
+			a.del_flag=#{DEL_FLAG_NORMAL} AND a.art_works_id=b.id AND a.create_by=c.id AND b.org_id=d.id
+			AND a.id=#{id}
+		</where>  
+	</select>
+	
+	<update id="update">
+		UPDATE art_works_comment a set 
+			a.status = #{status},
+			a.remarks = #{remarks},
+			a.update_by =  #{updateBy.id},
+			a.update_date = #{updateDate}
+		WHERE a.id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE art_works_comment SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+</mapper>

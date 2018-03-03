@@ -1,0 +1,42 @@
+.edit-container{
+}
+
+.foot-banner{
+	width:100%;
+	position: fixed;
+	bottom: 0;
+	background: #EFF2F4;
+	border-radius: 5px;
+	z-index: 200;
+	text-align: right;
+	height: 40px;
+}
+.right-banner{
+	width: 160px;
+	height: 200px;
+	position: fixed;
+	top: 50%;
+	margin-top: -170px;
+	background: #EFF2F4;
+	right: 20px;
+	border-radius: 5px;
+	z-index: 100;
+}
+.mid-content{
+	margin-left: 200px;
+	margin-right: 200px;
+	margin-bottom: 45px;
+}
+
+.tool-file{
+	position: absolute;
+    left: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+.t-overflow{
+	word-break: keep-all;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

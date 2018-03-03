@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.sys.dao.UserDao">
+	
+    <sql id="userColumns">
+    	a.id,
+    	a.login_name AS "loginName",
+    	a.password,
+		a.nick_name AS "nickName",
+		a.phone,
+		a.user_type AS "userType",
+		a.login_ip AS "loginIp",
+		a.login_date AS "loginDate",
+		a.remarks,
+		a.login_flag AS "loginFlag",
+		a.photo,
+		a.create_by AS "createBy.id",
+		a.create_date,
+		a.update_by AS "updateBy.id",
+		a.update_date,
+		a.org_id AS "org.id",
+		g.org_name AS "org.orgName",
+		r.role_id AS "role.id",
+		a.del_flag  AS "delFlag"
+    </sql>
+    
+    <sql id="userJoins">
+    	LEFT JOIN sys_org g ON a.org_id=g.id
+    	INNER JOIN sys_user_role r ON a.id=r.user_id
+    </sql>
+	
+	<!-- 根据编号获得用户 -->
+	<select id="get" resultType="User">
+		SELECT
+			<include refid="userColumns"/>
+		FROM sys_user a
+		<include refid="userJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<!-- 根据unionId获得用户 -->
+	<select id="getByUnionId" resultType="User">
+		SELECT
+			a.id,
+			a.login_name AS "loginName",
+			a.password,
+			a.nick_name AS "nickName",
+			a.phone,
+			a.user_type AS "userType",
+			a.login_ip AS "loginIp",
+			a.login_date AS "loginDate",
+			a.remarks,
+			a.login_flag AS "loginFlag",
+			a.photo,
+			a.create_by AS "createBy.id",
+			a.create_date,
+			a.update_by AS "updateBy.id",
+			a.update_date,
+			a.org_id AS "org.id",
+			g.org_name AS "org.orgName",
+			a.del_flag  AS "delFlag"
+		FROM sys_user a
+		LEFT JOIN sys_org g ON a.org_id=g.id
+		WHERE a.union_id = #{unionId}
+	</select>
+	
+	<!-- 根据登录名查询用户 -->
+	<select id="getByLoginName" resultType="User" parameterType="User">
+		SELECT
+			<include refid="userColumns"/>
+		FROM sys_user a
+		<include refid="userJoins"/>
+		WHERE a.login_name = #{loginName} AND a.del_flag = #{DEL_FLAG_NORMAL}
+	</select>
+	
+	<!-- 分页查询用户信息 -->
+	<select id="findList" resultType="User">
+		SELECT
+			<include refid="userColumns"/>
+		FROM sys_user a
+		<include refid="userJoins"/>
+		WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+		<if test="userType!=null and userType!=''">
+			AND a.user_type = #{userType}
+		</if>
+		<if test="org!=null and org.id!=null and org.id!=''">
+			AND a.org_id = #{org.id}
+		</if>
+		<if test="loginName != null and loginName != ''">
+			AND INSTR(a.login_name,#{loginName})<![CDATA[>]]>0
+		</if>
+		<if test="nickName != null and nickName != ''">
+			AND INSTR(a.nick_name,#{nickName})<![CDATA[>]]>0 
+		</if>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.nick_name
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 查询全部用户 -->
+	<select id="findAllList" resultType="User">
+		SELECT
+			<include refid="userColumns"/>
+		FROM sys_user a
+		<include refid="userJoins"/>
+		WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+		ORDER BY c.code, o.code, a.nick_name
+	</select>
+	
+	<!-- 查询全部用户数目 -->
+	<select id="findAllCount" resultType="long">
+		SELECT
+			COUNT(1)
+		FROM sys_user a
+		WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+	</select>
+	
+	<!-- 插入用户 -->
+	<insert id="insert">
+		INSERT INTO sys_user(
+			id, 
+			login_name, 
+			password, 
+			nick_name, 
+			phone,
+			union_id,
+			user_type, 
+			create_by, 
+			create_date, 
+			update_by, 
+			update_date, 
+			remarks, 
+			login_flag, 
+			photo, 
+			del_flag,
+			org_id
+		) VALUES (
+			#{id}, 
+			#{loginName}, 
+			#{password}, 
+			#{nickName}, 
+			#{phone},
+			#{unionId},
+			#{userType}, 
+			#{createBy.id}, 
+			#{createDate}, 
+			#{updateBy.id}, 
+			#{updateDate}, 
+			#{remarks}, 
+			#{loginFlag}, 
+			#{photo}, 
+			#{delFlag},
+			#{org.id}
+		)
+	</insert>
+	
+	<!-- 更新用户 -->
+	<update id="update">
+		UPDATE sys_user SET 
+			login_name = #{loginName}, 
+			password = #{password}, 
+			nick_name = #{nickName}, 
+			phone = #{phone}, 
+			user_type = #{userType}, 
+			update_by = #{updateBy.id}, 
+			update_date = #{updateDate}, 
+			remarks = #{remarks},
+			login_flag = #{loginFlag},
+			photo = #{photo}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="updateUserByUnionId">
+		UPDATE sys_user SET 
+			nick_name = #{nickName}, 
+			photo = #{avatarUrl}
+		WHERE union_id = #{unionId}
+	</update>
+	
+	
+	<!-- 删除用户和角色关联表数据 -->
+	<delete id="deleteUserRole">
+		DELETE FROM sys_user_role WHERE user_id = #{id}
+	</delete>
+	
+	<!-- 插入用户和角色关联表数据 -->
+	<insert id="insertUserRole">
+		INSERT INTO sys_user_role(user_id, role_id)
+		<foreach collection="roleList" item="role" separator=" union all ">
+			SELECT #{id}, #{role.id}
+			<if test="dbName != 'mssql'">
+			FROM dual
+			</if>
+		</foreach>
+	</insert>
+	
+	<!-- 更新用户信息  -->
+	<update id="updateUserInfo">
+		UPDATE sys_user SET 
+			email = #{email}, 
+			phone = #{phone}, 
+			mobile = #{mobile}, 
+			update_by = #{updateBy.id}, 
+			update_date = #{updateDate}, 
+			remarks = #{remarks},
+			photo = #{photo}
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 更新用户密码 -->
+	<update id="updatePasswordById">
+		UPDATE sys_user SET 
+			password = #{password} 
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 更新登录信息，如登录IP、登录时间 -->
+	<update id="updateLoginInfo">
+		UPDATE sys_user SET 
+			login_ip = #{loginIp}, 
+			login_Date = #{loginDate} 
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 逻辑删除用户 -->
+	<update id="delete">
+		UPDATE sys_user SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
