@@ -62,6 +62,9 @@ public class ArtAuthController extends BaseController{
 		return "modules/art/artAuthList";
 	}
 	
+	/**
+	 * 编辑
+	 */
 	@RequiresPermissions("art:auth:edit")
 	@RequestMapping(value = "form")
 	public String form(ArtAuth artAuth, HttpServletRequest request, HttpServletResponse response, Model model) {
@@ -76,6 +79,9 @@ public class ArtAuthController extends BaseController{
 		return "modules/art/artAuthForm";
 	}
 	
+	/**
+	 * 保存
+	 */
 	@RequiresPermissions("art:auth:edit")
 	@RequestMapping(value = "save")
 	public String save(ArtAuth artAuth, Model model, RedirectAttributes redirectAttributes) {
@@ -88,6 +94,14 @@ public class ArtAuthController extends BaseController{
 		}
 		
 		addMessage(redirectAttributes, "操作成功");
+		return "redirect:" + adminPath + "/art/auth/?repage";
+	}
+	
+	@RequiresPermissions("art:auth:edit")
+	@RequestMapping(value = "delete")
+	public String delete(ArtAuth artAuth, RedirectAttributes redirectAttributes) {
+		artAuthService.delete(artAuth);
+		addMessage(redirectAttributes, "删除认证申请成功");
 		return "redirect:" + adminPath + "/art/auth/?repage";
 	}
 	

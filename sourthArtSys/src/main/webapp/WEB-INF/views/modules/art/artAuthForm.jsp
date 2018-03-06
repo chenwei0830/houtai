@@ -63,10 +63,12 @@
 			$("#btnCheck").click(function(){
 				//判断是否选中了审核
 				$("#status-help").text("*");
-				if($("#staus").val()==""){
-					$("#status-help").text("*请选择审核结果");
-				}else{
+				var status = $("input[name='status']:checked").val();
+				console.log("status--"+status);
+				if(typeof(status)!="undefined"){
 					$("#inputForm").submit();
+				}else{
+					$("#status-help").text("*请选择审核结果");
 				}
 			});
 			
@@ -249,7 +251,7 @@
 				<label class="control-label">认证审核：</label>
 				<div class="controls">
 					<form:radiobuttons path="status" items="${fns:getDictList('check_status')}" itemLabel="label" itemValue="value" disabled="${not empty artAuth.id && artAuth.status eq '0'?false:true}"  htmlEscape="false" class="required"/>
-					<span class="help-inline"><font color="red" id="status-help">*</font> 确认后不能进行修改。</span>
+					<span class="help-inline"><font color="red" id="status-help">*</font></span>
 				</div>
 			</div> 
 			<div class="control-group" style="color: red;">

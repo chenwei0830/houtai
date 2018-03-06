@@ -42,8 +42,8 @@
 			<li>
 				<label>申请日期：</label>
 				<input id="beginDate" name="beginDate" type="text" maxlength="20" class="input-mini Wdate"
-					value="<fmt:formatDate value="${artWorks.beginDate}" pattern="yyyy-MM-dd"/>" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});"/>&nbsp;--&nbsp;<input id="endDate" name="endDate" type="text" maxlength="20" class="input-mini Wdate"
-					value="<fmt:formatDate value="${artWorks.endDate}" pattern="yyyy-MM-dd"/>" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});"/>
+					value="<fmt:formatDate value="${artAuth.beginDate}" pattern="yyyy-MM-dd"/>" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});"/>&nbsp;--&nbsp;<input id="endDate" name="endDate" type="text" maxlength="20" class="input-mini Wdate"
+					value="<fmt:formatDate value="${artAuth.endDate}" pattern="yyyy-MM-dd"/>" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});"/>
 			</li>
 			<li><label>艺术分类：</label>
 				<form:select path="artType" class="input-medium">
@@ -101,8 +101,15 @@
 				</td>
 				<td>${entity.org.orgName}</td>
 				<td>
-					<a href="${ctx}/art/auth/delete?id=${entity.id}" onclick="return confirmx('确认要删除该认证申请吗？', this.href)">删除</a>
-					<a class="blue-btn" href="${ctx}/art/auth/form?id=${entity.id}">${entity.status eq '0'?'审核':'查看'}</a>
+					<c:choose>
+						<c:when test="${entity.status eq '0'}">
+							<a href="${ctx}/art/auth/delete?id=${entity.id}" onclick="return confirmx('确认要删除该认证申请吗？', this.href)">删除</a>
+							<a class="blue-btn" href="${ctx}/art/auth/form?id=${entity.id}">审核</a>
+						</c:when>
+						<c:otherwise>
+							<a class="blue-btn" href="${ctx}/art/auth/form?id=${entity.id}">查看</a>
+						</c:otherwise>
+					</c:choose>
 				</td>
 			</tr>
 		</c:forEach>

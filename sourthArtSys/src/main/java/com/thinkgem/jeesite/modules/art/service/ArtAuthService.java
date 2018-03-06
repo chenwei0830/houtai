@@ -26,6 +26,8 @@ public class ArtAuthService extends CrudService<ArtAuthDao, ArtAuth>{
 	 */
 	@Transactional(readOnly = false)
 	public void saveAuthImgs(String[] fileIds,String authId) {
+		
+		//新插入
 		for(String fileId : fileIds) {
 			String imgUrl = QiNiuUtils.QN_URL+"/"+fileId;
 			ArtAuthImg authImg = new ArtAuthImg();

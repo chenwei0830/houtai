@@ -128,12 +128,18 @@
 		)
 	</insert>
 	
-	
 	<update id="update">
 		UPDATE sys_user_auth SET
+			status = #{status},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
 	</update>
 	
 	<update id="delete">
+		UPDATE sys_user_auth SET
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
 	</update>
-	
 </mapper>

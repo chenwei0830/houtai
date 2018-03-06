@@ -12,16 +12,16 @@ public class ArtAuth extends DataEntity<ArtAuth>{
 
 	private static final long serialVersionUID = 1L;
 
-	private String unionId;
-	private String name;
-	private String idCard;
-	private String phone;
-	private String artType;
-	private String artLevel;
-	private String status;
-	private String files;
-	private String feePayStatus;//认证费用支付状态
-	private String feePayNo;	//认证费用支付订单号
+	private String unionId;			//UnionId
+	private String name;			//姓名
+	private String idCard;			//身份证
+	private String phone;			//手机号
+	private String artType;			//艺术分类
+	private String artLevel;		//艺术家级别
+	private String status;			//审核状态
+	private String files;			//上传文件
+	private String feePayStatus;	//认证费用支付状态
+	private String feePayNo;		//认证费用支付订单号
 	private List<ArtAuthImg> imgList;	//认证图片
 	
 	
