@@ -64,7 +64,6 @@
 				//判断是否选中了审核
 				$("#status-help").text("*");
 				var status = $("input[name='status']:checked").val();
-				console.log("status--"+status);
 				if(typeof(status)!="undefined"){
 					$("#inputForm").submit();
 				}else{

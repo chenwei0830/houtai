@@ -17,7 +17,8 @@
 			a.update_by AS "updateBy.id",
 			a.update_date AS "updateDate",
 			a.org_id AS "org.id",
-			g.org_name AS "org.orgName"
+			g.org_name AS "org.orgName",
+			(select count(t.id) from art_works_comment t where t.art_works_id=a.id AND t.status='1' and t.del_flag='0') AS "plNum"
 		FROM art_works a ,sys_user b,sys_org g
 		<where>
 			a.del_flag=#{DEL_FLAG_NORMAL} and a.user_id = b.id and a.org_id=g.id
@@ -46,10 +47,64 @@
 		ORDER BY a.update_date DESC
 	</select>
 	
+	<select id="get" resultMap="artWorksMap">
+		SELECT 
+			a.id,
+			a.art_type,
+			a.model_type,
+			a.title,
+			a.user_id,
+			b.nick_name,
+			a.status,
+			a.create_by,
+			a.create_date,
+			a.update_by,
+			a.update_date,
+			a.org_id,
+			g.org_name,
+			w.id AS c_id,
+			w.file_type,
+			w.content,
+			(select count(t.id) from art_works_comment t where t.art_works_id=a.id AND t.status='1' and t.del_flag='0') pl_num
+		FROM art_works a ,sys_user b,sys_org g,art_works_content w
+		<where>
+			a.del_flag=#{DEL_FLAG_NORMAL} and a.user_id = b.id and a.org_id=g.id and w.art_works_id=a.id
+			and a.id = #{id}
+		</where>  
+	</select>
+	
+	<resultMap type="com.thinkgem.jeesite.modules.art.entity.ArtWorks" id="artWorksMap">
+		<id column="id" property="id" />
+		<result column="art_type" property="artType" />
+		<result column="model_type" property="modelType" />
+		<result column="title" property="title" />
+		<result column="user_id" property="user.id" />
+		<result column="nick_name" property="user.nickName" />
+		<result column="status" property="status" />
+		<result column="create_by" property="createBy.id" />
+		<result column="create_date" property="createDate" />
+		<result column="update_by" property="updateBy.id" />
+		<result column="update_date" property="updateDate" />
+		<result column="org_id" property="org.id" />
+		<result column="org_name" property="org.orgName" />
+		<result column="pl_num" property="plNum" />
+		<collection property="contentList" ofType="com.thinkgem.jeesite.modules.art.entity.ArtWorksContent">
+			<id column="c_id" property="id" />
+			<result column="file_type" property="fileType" />
+			<result column="content" property="content" />
+		</collection>
+	</resultMap>
+	
 	<insert id="insert">
 	</insert>
 	
 	<update id="update">
+		UPDATE art_works SET
+			status = #{status},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
 	</update>
 	
 	<update id="delete">

@@ -9,11 +9,12 @@
 			
 			//查看评论列表
 			$(".pl-list").click(function(){
+				var id = $(this).data("id");
 				top.layer.open({
 					title:['查看评论','background:#3daae9;color:#fff;'],
 					type:2,
 					maxmin: true,
-					content: '${ctx}/art/artworks/',
+					content: '${ctx}/art/comment/listOfArtWorks?artWorks.id='+id,
 					area:['900px','600px']
 				});
 			});
@@ -30,7 +31,7 @@
 <body>
 	<ul class="nav nav-tabs">
 		<li class="active"><a href="${ctx}/art/artworks/">作品列表</a></li>
-		<li><a href="${ctx}/art/artworks/form">作品${not empty artWorks.id?'编辑':'新增'}</a></li>
+		<%-- <li><a href="${ctx}/art/artworks/form">作品${not empty artWorks.id?'编辑':'新增'}</a></li> --%>
 	</ul>
 	<form:form id="searchForm" modelAttribute="artWorks" action="${ctx}/art/artworks/" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
@@ -112,19 +113,20 @@
 				<td>
 					<c:choose>
 						<c:when test="${entity.status eq '0'}">
-							<shiro:hasPermission name="art:artworks:edit">
-								<a class="blue-btn" href="${ctx}/art/artworks/form?id=${entity.id}">修改</a>
-								<a href="${ctx}/art/artworks/delete?id=${entity.id}" onclick="return confirmx('确认要删除该作品吗？', this.href)">删除</a>
-							</shiro:hasPermission>
 							<shiro:hasPermission name="art:artworks:check">
-								<a class="blue-btn" href="${ctx}/art/artworks/form?id=${entity.id}">审核</a>
+								<a class="blue-btn" href="${ctx}/art/artworks/view?id=${entity.id}">审核</a>
 							</shiro:hasPermission>
 						</c:when>
 						<c:otherwise>
 							<a href="${ctx}/art/artworks/view?id=${entity.id}">查看</a>
-							<a class="pl-list" title="待审核评论5条">评论<font color="red">(5)</font></a>
 						</c:otherwise>
 					</c:choose>
+					<c:if test="${entity.plNum gt 0}">
+						<a class="pl-list" style="cursor: pointer;" title="评论${entity.plNum}条" data-id="${entity.id}">评论(${entity.plNum})</a>
+					</c:if>
+					<shiro:hasPermission name="art:artworks:edit">
+						<a href="${ctx}/art/artworks/delete?id=${entity.id}" style="color: red;" onclick="return confirmx('确认要删除该作品吗？', this.href)">删除</a>
+					</shiro:hasPermission>
 				</td>
 			</tr>
 		</c:forEach>

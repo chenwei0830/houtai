@@ -1,5 +1,5 @@
 /**
-\ * Copyright &copy; 2012-2016 <a href="https://github.com/thinkgem/jeesite">JeeSite</a> All rights reserved.
+\\ * Copyright &copy; 2012-2016 <a href="https://github.com/thinkgem/jeesite">JeeSite</a> All rights reserved.
  */
 package com.thinkgem.jeesite.common.config;
 
@@ -52,6 +52,15 @@ public class Global {
 	 */
 	public static final String TRUE = "true";
 	public static final String FALSE = "false";
+	
+	
+	
+	/**
+	 * 文件类型
+	 */
+	public static final String FILE_TYPE_IMG = "0";//图片
+	public static final String FILE_TYPE_VEDIO = "1";//视频
+	public static final String FILE_TYPE_TEXT = "2";//文本
 	
 	/**
 	 * 系统管理员角色

@@ -76,4 +76,25 @@ public class ArtWorksCommentController extends BaseController{
 		addMessage(redirectAttributes, "删除评论成功");
 		return "redirect:" + adminPath + "/art/comment/?repage";
 	}
+	
+	
+	
+	/**
+	 * 查看作品评论
+	 */
+	@RequestMapping(value = {"listOfArtWorks"})
+	public String listOfArtWorks(ArtWorksComment artWorksComment, HttpServletRequest request, HttpServletResponse response, Model model) {
+		
+		User user = UserUtils.getUser();
+		if(user!=null) {
+			//机构子管理员 查看整个机构数据
+			if(user.getRole()!=null && StringUtils.equals(user.getRole().getId(), Global.COM_ROLE_ADMIN_ID)) {
+				artWorksComment.setOrg(user.getOrg());
+			}
+		}
+		Page<ArtWorksComment> page = artWorksCommentService.findPage(new Page<ArtWorksComment>(request, response), artWorksComment);
+		model.addAttribute("page", page);
+		model.addAttribute("artWorksComment", artWorksComment);
+		return "modules/art/artCommentListOfwork";
+	}
 }

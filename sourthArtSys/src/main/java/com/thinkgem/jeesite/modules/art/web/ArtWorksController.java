@@ -1,5 +1,8 @@
 package com.thinkgem.jeesite.modules.art.web;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -9,11 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.thinkgem.jeesite.common.config.Global;
 import com.thinkgem.jeesite.common.persistence.Page;
 import com.thinkgem.jeesite.common.web.BaseController;
 import com.thinkgem.jeesite.modules.art.entity.ArtWorks;
+import com.thinkgem.jeesite.modules.art.entity.ArtWorksContent;
 import com.thinkgem.jeesite.modules.art.service.ArtWorksService;
 import com.thinkgem.jeesite.modules.sys.entity.User;
 import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
@@ -61,7 +66,39 @@ public class ArtWorksController extends BaseController{
 	@RequiresPermissions("art:artworks:view")
 	@RequestMapping(value = "view")
 	public String preView(ArtWorks artWorks, HttpServletRequest request, HttpServletResponse response, Model model) {
+		artWorks = artWorksService.get(artWorks);
+		
+		if(!artWorks.getContentList().isEmpty()) {
+			
+			List<String> imgList = new ArrayList<String>();
+			List<String> videoList = new ArrayList<String>();
+			for(ArtWorksContent c : artWorks.getContentList()) {
+				if(StringUtils.equals(c.getFileType(), Global.FILE_TYPE_IMG)) {
+					imgList.add(c.getContent());
+				}else if(StringUtils.equals(c.getFileType(), Global.FILE_TYPE_VEDIO)) {
+					videoList.add(c.getContent());
+				}else if(StringUtils.equals(c.getFileType(), Global.FILE_TYPE_TEXT)) {
+					artWorks.setTextContent(c.getContent());
+				}else {}
+				
+			}
+			artWorks.setImgList(imgList);
+			artWorks.setVideoList(videoList);
+		}
+		
 		model.addAttribute("artWorks", artWorks);
 		return "modules/art/artWorksView";
 	}
+	
+	/**
+	 * 审核提交
+	 */
+	@RequiresPermissions("art:auth:edit")
+	@RequestMapping(value = "save")
+	public String save(ArtWorks artWorks, Model model, RedirectAttributes redirectAttributes) {
+		
+		artWorksService.save(artWorks);
+		addMessage(redirectAttributes, "审核成功");
+		return "redirect:" + adminPath + "/art/artworks/?repage";
+	}	
 }

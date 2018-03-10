@@ -25,6 +25,9 @@
 			<if test="artWorks!=null and artWorks.title!=null and artWorks.title!=''">
 				AND INSTR(b.title,#{artWorks.title})<![CDATA[<>]]>0
 			</if>
+			<if test="artWorks!=null and artWorks.id!=null and artWorks.id!=''">
+				AND b.id = #{artWorks.id}
+			</if>
 			<if test="org!=null and org.id!=null and org.id!=''">
 				AND b.org_id = #{org.id}
 			</if>

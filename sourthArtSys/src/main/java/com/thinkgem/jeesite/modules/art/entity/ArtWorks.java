@@ -1,6 +1,7 @@
 package com.thinkgem.jeesite.modules.art.entity;
 
 import java.util.Date;
+import java.util.List;
 
 import com.thinkgem.jeesite.common.persistence.DataEntity;
 import com.thinkgem.jeesite.modules.sys.entity.User;
@@ -20,6 +21,44 @@ public class ArtWorks extends DataEntity<ArtWorks>{
 	private Date beginDate;		//开始日期
 	private Date endDate;		//截止日期
 	private String location;	//定位
+	private List<ArtWorksContent> contentList;//内容详情
+	
+	private List<String> imgList;		//图片List
+	private List<String> videoList;		//视频List
+	private String textContent;			//文本内容
+	private int plNum;					//评论数(已通过审核的)
+	
+	
+	public int getPlNum() {
+		return plNum;
+	}
+	public void setPlNum(int plNum) {
+		this.plNum = plNum;
+	}
+	public List<String> getImgList() {
+		return imgList;
+	}
+	public void setImgList(List<String> imgList) {
+		this.imgList = imgList;
+	}
+	public List<String> getVideoList() {
+		return videoList;
+	}
+	public void setVideoList(List<String> videoList) {
+		this.videoList = videoList;
+	}
+	public String getTextContent() {
+		return textContent;
+	}
+	public void setTextContent(String textContent) {
+		this.textContent = textContent;
+	}
+	public List<ArtWorksContent> getContentList() {
+		return contentList;
+	}
+	public void setContentList(List<ArtWorksContent> contentList) {
+		this.contentList = contentList;
+	}
 	
 	public String getLocation() {
 		return location;
