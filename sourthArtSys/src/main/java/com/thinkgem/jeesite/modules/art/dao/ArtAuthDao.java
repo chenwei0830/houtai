@@ -19,4 +19,5 @@ public interface ArtAuthDao extends CrudDao<ArtAuth>{
 	void insertAuthImg(ArtAuthImg artAuthImg);
 	List<ArtAuthImg> getArtAuthImgList(ArtAuth artAuth);
 	void deleteAllImgByAuthId(@Param("authId") String authId);
+	int authStatus(@Param("openId")String openId);
 }

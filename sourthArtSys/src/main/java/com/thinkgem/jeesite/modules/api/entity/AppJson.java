@@ -36,7 +36,7 @@ public class AppJson {
 	public AppJson(String msg) {
 		super();
 		this.code = "-1";
-		this.msg = "FAIL";
+		this.msg = msg;
 		this.data = "";
 	}
 	

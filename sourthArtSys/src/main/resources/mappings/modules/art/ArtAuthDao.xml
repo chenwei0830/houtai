@@ -7,7 +7,7 @@
 		SELECT 
 			a.id,
 			a.name,
-			a.union_id AS "unionId",
+			a.open_id AS "openId",
 			a.id_card AS "idCard",
 			a.phone,
 			a.art_type AS "artType",
@@ -44,7 +44,7 @@
 		SELECT
 			a.id,
 			a.name,
-			a.union_id AS "unionId",
+			a.open_id AS "openId",
 			a.id_card AS "idCard",
 			a.phone,
 			a.art_type AS "artType",
@@ -79,7 +79,7 @@
 	<insert id="insert">
 		INSERT INTO sys_user_auth(
 			id,
-			union_id,
+			open_id,
 			name,
 			id_card,
 			phone,
@@ -97,7 +97,7 @@
 			del_flag
 		) VALUES (
 			#{id},
-			#{unionId},
+			#{openId},
 			#{name},
 			#{idCard},
 			#{phone},
@@ -142,4 +142,8 @@
 			del_flag = #{DEL_FLAG_DELETE}
 		WHERE id = #{id}
 	</update>
+	
+	<select id="authStatus" resultType="java.lang.Integer">
+		SELECT count(a.id)  FROM sys_user_auth a WHERE a.open_id=#{openId} and a.status='0' and a.del_flag='0'
+	</select>
 </mapper>

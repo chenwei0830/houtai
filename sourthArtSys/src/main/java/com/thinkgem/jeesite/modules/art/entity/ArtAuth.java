@@ -12,7 +12,7 @@ public class ArtAuth extends DataEntity<ArtAuth>{
 
 	private static final long serialVersionUID = 1L;
 
-	private String unionId;			//UnionId
+	private String openId;			//openId
 	private String name;			//姓名
 	private String idCard;			//身份证
 	private String phone;			//手机号
@@ -25,14 +25,17 @@ public class ArtAuth extends DataEntity<ArtAuth>{
 	private List<ArtAuthImg> imgList;	//认证图片
 	
 	
+	private List<String> rList;		//认证图片(只包含URL)
+	
 	private Date beginDate;		//开始日期
 	private Date endDate;		//截止日期
+	private String orgId;		//机构ID
 	
-	public String getUnionId() {
-		return unionId;
+	public String getOrgId() {
+		return orgId;
 	}
-	public void setUnionId(String unionId) {
-		this.unionId = unionId;
+	public void setOrgId(String orgId) {
+		this.orgId = orgId;
 	}
 	public String getName() {
 		return name;
@@ -105,5 +108,17 @@ public class ArtAuth extends DataEntity<ArtAuth>{
 	}
 	public void setImgList(List<ArtAuthImg> imgList) {
 		this.imgList = imgList;
+	}
+	public String getOpenId() {
+		return openId;
+	}
+	public void setOpenId(String openId) {
+		this.openId = openId;
+	}
+	public List<String> getrList() {
+		return rList;
+	}
+	public void setrList(List<String> rList) {
+		this.rList = rList;
 	}
 }

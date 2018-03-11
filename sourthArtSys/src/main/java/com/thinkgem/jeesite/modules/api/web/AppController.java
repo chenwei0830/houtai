@@ -23,6 +23,7 @@ import com.thinkgem.jeesite.modules.api.entity.AppJson;
 import com.thinkgem.jeesite.modules.api.entity.WxResult;
 import com.thinkgem.jeesite.modules.api.entity.WxUser;
 import com.thinkgem.jeesite.modules.api.service.AppService;
+import com.thinkgem.jeesite.modules.art.entity.ArtAuth;
 import com.thinkgem.jeesite.modules.sys.entity.Dict;
 import com.thinkgem.jeesite.modules.sys.entity.User;
 import com.thinkgem.jeesite.modules.sys.utils.DictUtils;
@@ -45,12 +46,12 @@ public class AppController {
 	@RequestMapping(value = {"login"},method = RequestMethod.POST)
 	public AppJson login(@RequestBody WxUser wxUser) {
 		
-		if(wxUser!=null && StringUtils.isNotBlank(wxUser.getUnionId())) {
+		if(wxUser!=null && StringUtils.isNotBlank(wxUser.getOpenId())) {
 			//根据unionId判断是否已注册,未注册先插入数据
-			User u = appService.getUserByUnionId(wxUser.getUnionId());
+			User u = appService.getUserByOpenId(wxUser.getOpenId());
 			if(u!=null) {
 				//更新昵称+头像
-				appService.updateUserByUnionId(wxUser);
+				appService.updateUserByOpenId(wxUser);
 				return new AppJson("0","登录成功",null);
 			}else {
 				int a = appService.register(wxUser);
@@ -110,18 +111,33 @@ public class AppController {
 	}
 	
 	/**
-	 * 艺术认证
+	 * 认证审核状态:返回等待审核的条数
 	 */
 	@ResponseBody
-	@RequestMapping(value = {"auth"},method = RequestMethod.POST)
-	public AppJson auth(@RequestBody WxUser wxUser) {
-		
-		
-		return null;
+	@RequestMapping(value = {"authStatus"},method = RequestMethod.GET)
+	public AppJson authStatus(@RequestParam String openId) {
+		int a = appService.authStatus(openId);
+		return new AppJson(a);
 	}
 	
 	
 	
+	/**
+	 * 艺术认证
+	 */
+	@ResponseBody
+	@RequestMapping(value = {"auth"},method = RequestMethod.POST)
+	public AppJson auth(@RequestBody ArtAuth artAuth) {
+		
+		boolean flag = appService.saveAuth(artAuth);
+		if(flag) {
+			return new AppJson();
+		}else {
+			return new AppJson("认证信息缺失或错误");
+		}
+	}
+	
+
 	/**
 	 * 获取艺术分类及艺术级别
 	 */

@@ -13,7 +13,7 @@ public class WxUser {
 	private String province;		//省
 	private String country;			//国家
 	private String avatarUrl;		//头像URL
-	private String unionId;			//唯一标识
+	private String openId;			//唯一标识
 	private WxWaterMark watermark;	//水印
 	private String orgId;			//机构ID
 	
@@ -65,11 +65,11 @@ public class WxUser {
 	public void setAvatarUrl(String avatarUrl) {
 		this.avatarUrl = avatarUrl;
 	}
-	public String getUnionId() {
-		return unionId;
+	public String getOpenId() {
+		return openId;
 	}
-	public void setUnionId(String unionId) {
-		this.unionId = unionId;
+	public void setOpenId(String openId) {
+		this.openId = openId;
 	}
 	public WxWaterMark getWatermark() {
 		return watermark;

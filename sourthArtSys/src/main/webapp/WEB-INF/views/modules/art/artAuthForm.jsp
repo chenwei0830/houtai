@@ -75,7 +75,7 @@
 			//重置提示语
 			function resetHelpLine(){
 				$("#orgid-help").text("*");
-				$("#unionid-help").text("*");;
+				$("#openid-help").text("*");;
 				$("#name-help").text("*");;
 				$("#idcard-help").text("*");
 				$("#arttype-help").text("*");;
@@ -90,9 +90,9 @@
 					top.layer.msg("请选择机构");
 					return false;
 				}
-				if($("#unionId").val()==""){
-					$("#unionid-help").text("*请填写unionId");
-					top.layer.msg("请填写unionId");
+				if($("#openId").val()==""){
+					$("#openid-help").text("*请填写openId");
+					top.layer.msg("请填写openId");
 					return false;
 				}
 				
@@ -175,10 +175,10 @@
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">UnionId：</label>
+			<label class="control-label">openId：</label>
 			<div class="controls">
-				<form:input path="unionId" htmlEscape="false" maxlength="200" class="input-xlarge required" readonly="${empty artAuth.id?false:true}"/>
-				<span class="help-inline"><font color="red" id="unionid-help">*</font> </span>
+				<form:input path="openId" htmlEscape="false" maxlength="200" class="input-xlarge required" readonly="${empty artAuth.id?false:true}"/>
+				<span class="help-inline"><font color="red" id="openid-help">*</font> </span>
 			</div>
 		</div>
 		<div class="control-group">

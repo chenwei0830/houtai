@@ -66,12 +66,12 @@ public interface UserDao extends CrudDao<User> {
 	 * @param unionId
 	 * @return
 	 */
-	public User getByUnionId(@Param("unionId")String unionId);
+	public User getByOpendId(@Param("openId")String openId);
 	
 	/**
 	 * 根据UNIONID更新用户昵称+头像
 	 * @param unionId
 	 * @return
 	 */
-	int updateUserByUnionId(WxUser wxUser);
+	int updateUserByOpenId(WxUser wxUser);
 }

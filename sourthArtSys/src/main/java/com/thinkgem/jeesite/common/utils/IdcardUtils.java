@@ -627,4 +627,11 @@ public class IdcardUtils extends StringUtils {
 		}
 		return (iDate >= 1) && (iDate <= datePerMonth);
 	}
+	
+	
+	 public static void main(String[] args) {
+	    	
+	    	String idCard = "362528199001201014";
+	    	System.out.println(IdcardUtils.validateCard(idCard));
+	    }
 }

@@ -29,7 +29,7 @@ public class User extends DataEntity<User> {
 	private String nickName;		// 昵称
 	private String photo;			// 头像
 	private String phone;			// 手机
-	private String unionId;			// 微信unionId
+	private String openId;			// 微信openId
 	
 	private String userType;		// 用户类型   '0'-系统用户   '1'-认证用户  '-1'-未认证用户
 	private String loginIp;			// 最后登陆IP
@@ -119,12 +119,12 @@ public class User extends DataEntity<User> {
 	}
 
 
-	public String getUnionId() {
-		return unionId;
+	public String getOpenId() {
+		return openId;
 	}
 
-	public void setUnionId(String unionId) {
-		this.unionId = unionId;
+	public void setOpenId(String openId) {
+		this.openId = openId;
 	}
 
 	@Length(min=0, max=200, message="电话长度必须介于 1 和 200 之间")
