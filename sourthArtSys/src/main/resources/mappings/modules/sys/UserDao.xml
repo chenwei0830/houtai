@@ -39,7 +39,7 @@
 	</select>
 	
 	<!-- 根据unionId获得用户 -->
-	<select id="getByUnionId" resultType="User">
+	<select id="getByOpenId" resultType="User">
 		SELECT
 			a.id,
 			a.login_name AS "loginName",
@@ -61,7 +61,7 @@
 			a.del_flag  AS "delFlag"
 		FROM sys_user a
 		LEFT JOIN sys_org g ON a.org_id=g.id
-		WHERE a.union_id = #{unionId}
+		WHERE a.open_id = #{openId}
 	</select>
 	
 	<!-- 根据登录名查询用户 -->

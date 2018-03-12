@@ -62,8 +62,8 @@ public interface UserDao extends CrudDao<User> {
 	public int updateUserInfo(User user);
 
 	/**
-	 * 根据UNIONID查询用户
-	 * @param unionId
+	 * 根据openId查询用户
+	 * @param openId
 	 * @return
 	 */
 	public User getByOpendId(@Param("openId")String openId);

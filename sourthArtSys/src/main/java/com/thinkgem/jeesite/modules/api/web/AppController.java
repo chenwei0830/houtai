@@ -24,6 +24,7 @@ import com.thinkgem.jeesite.modules.api.entity.WxResult;
 import com.thinkgem.jeesite.modules.api.entity.WxUser;
 import com.thinkgem.jeesite.modules.api.service.AppService;
 import com.thinkgem.jeesite.modules.art.entity.ArtAuth;
+import com.thinkgem.jeesite.modules.art.entity.ArtWorks;
 import com.thinkgem.jeesite.modules.sys.entity.Dict;
 import com.thinkgem.jeesite.modules.sys.entity.User;
 import com.thinkgem.jeesite.modules.sys.utils.DictUtils;
@@ -109,6 +110,24 @@ public class AppController {
 		
 		return jon;
 	}
+	
+	
+	/**
+	 * 保存作品
+	 */
+	@ResponseBody
+	@RequestMapping(value = {"saveArtworks"},method = RequestMethod.POST)
+	public AppJson saveArtworks(@RequestBody ArtWorks artWorks) {
+		boolean flag = appService.saveArtworks(artWorks);
+		if(flag) {
+			return new AppJson();
+		}else {
+			return new AppJson("保存作品失败");
+		}
+	}
+	
+	
+	
 	
 	/**
 	 * 认证审核状态:返回等待审核的条数

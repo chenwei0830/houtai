@@ -3,6 +3,7 @@ package com.thinkgem.jeesite.modules.art.dao;
 import com.thinkgem.jeesite.common.persistence.CrudDao;
 import com.thinkgem.jeesite.common.persistence.annotation.MyBatisDao;
 import com.thinkgem.jeesite.modules.art.entity.ArtWorks;
+import com.thinkgem.jeesite.modules.art.entity.ArtWorksContent;
 
 /**
  * 艺术作品DAO接口
@@ -11,4 +12,5 @@ import com.thinkgem.jeesite.modules.art.entity.ArtWorks;
 @MyBatisDao
 public interface ArtWorksDao extends CrudDao<ArtWorks>{
 
+	int insertArtWorkContent(ArtWorksContent art);
 }

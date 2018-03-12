@@ -13,16 +13,17 @@ public class ArtWorks extends DataEntity<ArtWorks>{
 
 	private static final long serialVersionUID = 1L;
 	
-	private String title; 		// 标题
-	private String modelType; 	// 作品展示模型 '0'-图文 '1'-视频+文  '2'-纯文
-	private String artType; 	// 艺术类别
-	private User user; 			// 作者ID
-	private String status;		//审核状态 '0'-待审核  '1'-审核通过 '2'-审核不通过
-	private Date beginDate;		//开始日期
-	private Date endDate;		//截止日期
-	private String location;	//定位
+	private String title; 				// 标题
+	private String modelType; 			// 作品展示模型 '0'-图文 '1'-视频+文  '2'-纯文
+	private String artType; 			// 艺术类别
+	private User user; 					// 作者ID
+	private String status;				//审核状态 '0'-待审核  '1'-审核通过 '2'-审核不通过
+	private Date beginDate;				//开始日期
+	private Date endDate;				//截止日期
+	private String location;			//定位
 	private List<ArtWorksContent> contentList;//内容详情
-	
+	private String openId;				//openId
+	private String orgId;				//机构ID
 	private List<String> imgList;		//图片List
 	private List<String> videoList;		//视频List
 	private String textContent;			//文本内容
@@ -108,5 +109,16 @@ public class ArtWorks extends DataEntity<ArtWorks>{
 	public void setUser(User user) {
 		this.user = user;
 	}
-	
+	public String getOpenId() {
+		return openId;
+	}
+	public void setOpenId(String openId) {
+		this.openId = openId;
+	}
+	public String getOrgId() {
+		return orgId;
+	}
+	public void setOrgId(String orgId) {
+		this.orgId = orgId;
+	}
 }

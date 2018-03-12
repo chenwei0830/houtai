@@ -96,6 +96,55 @@
 	</resultMap>
 	
 	<insert id="insert">
+		INSERT INTO art_works(
+			id
+			title,
+			model_type,
+			art_type,
+			user_id,
+			org_id,
+			status,
+			location,
+			dz_num,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			del_flag,
+			remarks
+		) VALUES (
+			#{id},
+			#{title},
+			#{modelType},
+			#{artType},
+			#{user.id},
+			#{org.id},
+			#{status},
+			#{location},
+			#{dzNum},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{delFlag},
+			#{remarks}
+		)
+	</insert>
+	
+	<insert id="insertArtWorkContent">
+		INSERT INTO art_works_content(
+			id
+			content,
+			file_type,
+			art_works_id,
+			sort
+		) VALUES (
+			#{id},
+			#{content},
+			#{fileType},
+			#{artWorksId},
+			#{sort}
+		)
 	</insert>
 	
 	<update id="update">
