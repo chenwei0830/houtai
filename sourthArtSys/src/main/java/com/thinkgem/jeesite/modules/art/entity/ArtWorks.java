@@ -28,8 +28,14 @@ public class ArtWorks extends DataEntity<ArtWorks>{
 	private List<String> videoList;		//视频List
 	private String textContent;			//文本内容
 	private int plNum;					//评论数(已通过审核的)
+	private int dzNum;					//点赞数
 	
-	
+	public int getDzNum() {
+		return dzNum;
+	}
+	public void setDzNum(int dzNum) {
+		this.dzNum = dzNum;
+	}
 	public int getPlNum() {
 		return plNum;
 	}

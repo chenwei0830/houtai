@@ -53,12 +53,12 @@ public class AppService {
 	 * 根据unionId获取用户
 	 */
 	public User getUserByOpenId(String openId) {
-		return userDao.getByOpendId(openId);
+		return userDao.getByOpenId(openId);
 	}
 	
 	
 	/**
-	 * 根据unionId更新用户
+	 * 根据openId更新用户
 	 */
 	public int updateUserByOpenId(WxUser wxUser) {
 		return userDao.updateUserByOpenId(wxUser);
@@ -122,10 +122,9 @@ public class AppService {
 	public boolean saveArtworks(ArtWorks artWorks) {
 		
 		//校验
-		if(StringUtils.isNotBlank(artWorks.getOpenId())
-				&& StringUtils.isNotBlank(artWorks.getOrgId())) {
+		if(StringUtils.isNotBlank(artWorks.getOpenId()) && StringUtils.isNotBlank(artWorks.getOrgId())) {
 			
-			User user = userDao.getByOpendId(artWorks.getOpenId());
+			User user = userDao.getByOpenId(artWorks.getOpenId());
 			//插入主记录
 			artWorks.preInsert();
 			artWorks.setUpdateBy(user);
@@ -135,6 +134,7 @@ public class AppService {
 			artWorks.setUser(user);
 			artWorks.setStatus("0");//强制设置为'0'-待审核状态
 			artWorks.setOrg(new Org(artWorks.getOrgId()));
+			artWorks.setDzNum(0);//默认点赞数为0
 			int a = artWorksDao.insert(artWorks);
 			if(a>0) {
 				switch (artWorks.getModelType()) {
@@ -143,6 +143,7 @@ public class AppService {
 					if(artWorks.getImgList()!=null) {
 						for(int i=0;i<artWorks.getImgList().size();i++ ) {
 							ArtWorksContent art = new ArtWorksContent();
+							art.setId(IdGen.uuid());
 							art.setArtWorksId(artWorks.getId());
 							art.setContent(artWorks.getImgList().get(i));
 							art.setFileType(Global.FILE_TYPE_IMG);
@@ -156,6 +157,7 @@ public class AppService {
 					if(artWorks.getVideoList()!=null) {
 						for(int i=0;i<artWorks.getVideoList().size();i++ ) {
 							ArtWorksContent art = new ArtWorksContent();
+							art.setId(IdGen.uuid());
 							art.setArtWorksId(artWorks.getId());
 							art.setContent(artWorks.getVideoList().get(i));
 							art.setFileType(Global.FILE_TYPE_VEDIO);
@@ -171,6 +173,7 @@ public class AppService {
 				}
 				//最后插入内容
 				ArtWorksContent art = new ArtWorksContent();
+				art.setId(IdGen.uuid());
 				art.setArtWorksId(artWorks.getId());
 				art.setContent(artWorks.getTextContent());
 				art.setFileType(Global.FILE_TYPE_TEXT);

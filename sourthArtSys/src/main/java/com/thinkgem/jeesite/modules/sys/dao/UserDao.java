@@ -66,7 +66,7 @@ public interface UserDao extends CrudDao<User> {
 	 * @param openId
 	 * @return
 	 */
-	public User getByOpendId(@Param("openId")String openId);
+	public User getByOpenId(@Param("openId")String openId);
 	
 	/**
 	 * 根据UNIONID更新用户昵称+头像
