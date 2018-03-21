@@ -1,22 +1,45 @@
 package com.thinkgem.jeesite.modules.api.entity;
 
+import java.util.Date;
 
 /**
  * 小程序用户信息类
  */
 public class WxUser {
 
+	private String id;
 	private String nickName;		//昵称
 	private String gender;			//性别
 	private String language;		//语言
 	private String city;			//城市
 	private String province;		//省
 	private String country;			//国家
-	private String avatarUrl;		//头像URL
+	private String photo;			//头像URL
 	private String openId;			//唯一标识
-	private WxWaterMark watermark;	//水印
 	private String orgId;			//机构ID
+	private Date createDate;		// 创建日期
+	private Date updateDate;		// 更新日期
 	
+	
+	
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	public Date getCreateDate() {
+		return createDate;
+	}
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
+	public Date getUpdateDate() {
+		return updateDate;
+	}
+	public void setUpdateDate(Date updateDate) {
+		this.updateDate = updateDate;
+	}
 	public String getOrgId() {
 		return orgId;
 	}
@@ -59,22 +82,16 @@ public class WxUser {
 	public void setCountry(String country) {
 		this.country = country;
 	}
-	public String getAvatarUrl() {
-		return avatarUrl;
+	public String getPhoto() {
+		return photo;
 	}
-	public void setAvatarUrl(String avatarUrl) {
-		this.avatarUrl = avatarUrl;
+	public void setPhoto(String photo) {
+		this.photo = photo;
 	}
 	public String getOpenId() {
 		return openId;
 	}
 	public void setOpenId(String openId) {
 		this.openId = openId;
-	}
-	public WxWaterMark getWatermark() {
-		return watermark;
-	}
-	public void setWatermark(WxWaterMark watermark) {
-		this.watermark = watermark;
 	}
 }

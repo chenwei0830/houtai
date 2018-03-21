@@ -42,26 +42,10 @@
 	<select id="getByOpenId" resultType="User">
 		SELECT
 			a.id,
-			a.login_name AS "loginName",
-			a.password,
-			a.nick_name AS "nickName",
-			a.phone,
-			a.user_type AS "userType",
-			a.login_ip AS "loginIp",
-			a.login_date AS "loginDate",
-			a.remarks,
-			a.login_flag AS "loginFlag",
-			a.photo,
-			a.create_by AS "createBy.id",
-			a.create_date,
-			a.update_by AS "updateBy.id",
-			a.update_date,
-			a.org_id AS "org.id",
-			g.org_name AS "org.orgName",
+			a.open_id AS "openId",
 			a.del_flag  AS "delFlag"
 		FROM sys_user a
-		LEFT JOIN sys_org g ON a.org_id=g.id
-		WHERE a.open_id = #{openId}
+		WHERE a.open_id = #{openId} and a.org_id = #{orgId} and a.del_flag='0'
 	</select>
 	
 	<!-- 根据登录名查询用户 -->
@@ -124,11 +108,11 @@
 	<insert id="insert">
 		INSERT INTO sys_user(
 			id, 
-			login_name, 
+			login_name,
+			open_id,
 			password, 
 			nick_name, 
 			phone,
-			union_id,
 			user_type, 
 			create_by, 
 			create_date, 
@@ -141,11 +125,11 @@
 			org_id
 		) VALUES (
 			#{id}, 
-			#{loginName}, 
+			#{loginName},
+			#{openId},  
 			#{password}, 
 			#{nickName}, 
 			#{phone},
-			#{unionId},
 			#{userType}, 
 			#{createBy.id}, 
 			#{createDate}, 
@@ -234,4 +218,51 @@
 		WHERE id = #{id}
 	</update>
 	
+	<!-- 小程序登录更新用户信息 -->
+	<update id="updateUserByOpenId">
+		UPDATE sys_user SET 
+			nick_name = #{nickName}, 
+			update_date = #{updateDate}, 
+			photo = #{photo},
+			gender = #{gender},
+			city = #{city},
+			province = #{province},
+			country = #{country},
+			language = #{language}
+		WHERE open_id = #{openId} and org_id =#{orgId}
+	</update>
+	<!-- 小程序注册用户 -->
+	<insert id="registerXcx">
+		INSERT INTO sys_user(
+			id, 
+			open_id,
+			photo,
+			nick_name, 
+			user_type,
+			gender,
+			city,
+			province,
+			country,
+			language,
+			create_date, 
+			update_date, 
+			del_flag,
+			org_id
+		) VALUES (
+			#{id}, 
+			#{openId},
+			#{photo},   
+			#{nickName}, 
+			'-1',
+			#{gender},
+			#{city},
+			#{province},
+			#{country},
+			#{language},
+			#{createDate}, 
+			#{updateDate}, 
+			'0',
+			#{orgId}
+		)
+	</insert>
 </mapper>

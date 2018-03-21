@@ -13,6 +13,7 @@ import com.thinkgem.jeesite.common.utils.IdGen;
 import com.thinkgem.jeesite.common.utils.IdcardUtils;
 import com.thinkgem.jeesite.common.utils.PhoneUtils;
 import com.thinkgem.jeesite.modules.api.entity.ArtWorksVo;
+import com.thinkgem.jeesite.modules.api.entity.MineWorksAndInterest;
 import com.thinkgem.jeesite.modules.api.entity.WxUser;
 import com.thinkgem.jeesite.modules.art.dao.ArtAuthDao;
 import com.thinkgem.jeesite.modules.art.dao.ArtWorksDao;
@@ -50,10 +51,10 @@ public class AppService {
 	}
 	
 	/**
-	 * 根据unionId获取用户
+	 * 根据openId获取用户
 	 */
-	public User getUserByOpenId(String openId) {
-		return userDao.getByOpenId(openId);
+	public User getUserByOpenId(String openId,String orgId) {
+		return userDao.getByOpenId(openId,orgId);
 	}
 	
 	
@@ -63,6 +64,7 @@ public class AppService {
 	public int updateUserByOpenId(WxUser wxUser) {
 		return userDao.updateUserByOpenId(wxUser);
 	}
+	
 	
 	
 	/**
@@ -124,83 +126,89 @@ public class AppService {
 		//校验
 		if(StringUtils.isNotBlank(artWorks.getOpenId()) && StringUtils.isNotBlank(artWorks.getOrgId())) {
 			
-			User user = userDao.getByOpenId(artWorks.getOpenId());
-			//插入主记录
-			artWorks.preInsert();
-			artWorks.setUpdateBy(user);
-			artWorks.setCreateBy(user);
-			artWorks.setUpdateDate(new Date());
-			artWorks.setCreateDate(artWorks.getUpdateDate());
-			artWorks.setUser(user);
-			artWorks.setStatus("0");//强制设置为'0'-待审核状态
-			artWorks.setOrg(new Org(artWorks.getOrgId()));
-			artWorks.setDzNum(0);//默认点赞数为0
-			int a = artWorksDao.insert(artWorks);
-			if(a>0) {
-				switch (artWorks.getModelType()) {
-				case "0"://图文
-					//插入认证图片
-					if(artWorks.getImgList()!=null) {
-						for(int i=0;i<artWorks.getImgList().size();i++ ) {
-							ArtWorksContent art = new ArtWorksContent();
-							art.setId(IdGen.uuid());
-							art.setArtWorksId(artWorks.getId());
-							art.setContent(artWorks.getImgList().get(i));
-							art.setFileType(Global.FILE_TYPE_IMG);
-							art.setSort(i);
-							artWorksDao.insertArtWorkContent(art);
+			User user = userDao.getByOpenId(artWorks.getOpenId(),artWorks.getOrgId());
+			if(user!=null) {
+				//插入主记录
+				artWorks.setId(IdGen.uuid());
+				artWorks.setUpdateBy(user);
+				artWorks.setCreateBy(user);
+				artWorks.setUpdateDate(new Date());
+				artWorks.setCreateDate(artWorks.getUpdateDate());
+				artWorks.setUser(user);
+				artWorks.setStatus("0");//强制设置为'0'-待审核状态
+				artWorks.setOrg(new Org(artWorks.getOrgId()));
+				artWorks.setDzNum(0);//默认点赞数为0
+				int a = artWorksDao.insert(artWorks);
+				if(a>0) {
+					switch (artWorks.getModelType()) {
+					case "0"://图文
+						//插入认证图片
+						if(artWorks.getImgList()!=null) {
+							for(int i=0;i<artWorks.getImgList().size();i++ ) {
+								ArtWorksContent art = new ArtWorksContent();
+								art.setId(IdGen.uuid());
+								art.setArtWorksId(artWorks.getId());
+								art.setContent(artWorks.getImgList().get(i));
+								art.setFileType(Global.FILE_TYPE_IMG);
+								art.setSort(i);
+								artWorksDao.insertArtWorkContent(art);
+							}
 						}
-					}
-					break;
-				case "1"://视频
-					//插入认证图片
-					if(artWorks.getVideoList()!=null) {
-						for(int i=0;i<artWorks.getVideoList().size();i++ ) {
-							ArtWorksContent art = new ArtWorksContent();
-							art.setId(IdGen.uuid());
-							art.setArtWorksId(artWorks.getId());
-							art.setContent(artWorks.getVideoList().get(i));
-							art.setFileType(Global.FILE_TYPE_VEDIO);
-							art.setSort(i);
-							artWorksDao.insertArtWorkContent(art);
+						break;
+					case "1"://视频
+						//插入认证图片
+						if(artWorks.getVideoList()!=null) {
+							for(int i=0;i<artWorks.getVideoList().size();i++ ) {
+								ArtWorksContent art = new ArtWorksContent();
+								art.setId(IdGen.uuid());
+								art.setArtWorksId(artWorks.getId());
+								art.setContent(artWorks.getVideoList().get(i));
+								art.setFileType(Global.FILE_TYPE_VEDIO);
+								art.setSort(i);
+								artWorksDao.insertArtWorkContent(art);
+							}
 						}
+						break;
+					case "2"://纯文
+						break;
+					default:
+						break;
 					}
-					break;
-				case "2"://纯文
-					break;
-				default:
-					break;
+					//最后插入内容
+					ArtWorksContent art = new ArtWorksContent();
+					art.setId(IdGen.uuid());
+					art.setArtWorksId(artWorks.getId());
+					art.setContent(artWorks.getTextContent());
+					art.setFileType(Global.FILE_TYPE_TEXT);
+					art.setSort(10);//限制文件最多上传9个,取10,排在最后
+					artWorksDao.insertArtWorkContent(art);
 				}
-				//最后插入内容
-				ArtWorksContent art = new ArtWorksContent();
-				art.setId(IdGen.uuid());
-				art.setArtWorksId(artWorks.getId());
-				art.setContent(artWorks.getTextContent());
-				art.setFileType(Global.FILE_TYPE_TEXT);
-				art.setSort(10);//限制文件最多上传9个,取10,排在最后
-				artWorksDao.insertArtWorkContent(art);
+				return true;
 			}
 			
-			return true;
+			
 		}
 		
 		return false;
 	}
 	
+	
+	/**
+	 * 个人中心 获取作品数、收藏、关注
+	 */
+	public List<MineWorksAndInterest> getMineCountInfo(String openId) {
+		return artWorksDao.getMineCountInfo(openId);
+	}
+	
+	
 	/**
 	 * 注册
 	 */
 	@Transactional(readOnly = false)
-	public int register(WxUser wxUser) {
-		User u = new User();
-		u.setOpenId(wxUser.getOpenId());
-		u.setNickName(wxUser.getNickName());
-		u.setPhoto(wxUser.getAvatarUrl());
-		u.setOrg(new Org(wxUser.getOrgId()));
-		u.setUserType("-1");//未认证用户
-		u.setId(IdGen.uuid());
-		u.setUpdateDate(new Date());
-		u.setCreateDate(new Date());
-		return userDao.insert(u);
+	public int registerXcx(WxUser wxUser) {
+		wxUser.setId(IdGen.uuid());
+		wxUser.setCreateDate(new Date());
+		wxUser.setUpdateDate(new Date());
+		return userDao.registerXcx(wxUser);
 	}
 }

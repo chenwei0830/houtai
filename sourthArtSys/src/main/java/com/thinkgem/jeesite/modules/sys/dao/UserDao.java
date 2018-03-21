@@ -66,12 +66,17 @@ public interface UserDao extends CrudDao<User> {
 	 * @param openId
 	 * @return
 	 */
-	public User getByOpenId(@Param("openId")String openId);
+	public User getByOpenId(@Param("openId")String openId,@Param("orgId")String orgId);
 	
 	/**
-	 * 根据UNIONID更新用户昵称+头像
+	 * 根据openID更新用户昵称+头像
 	 * @param unionId
 	 * @return
 	 */
 	int updateUserByOpenId(WxUser wxUser);
+	
+	/**
+	 * 微信小程序游客注册
+	 */
+	int registerXcx(WxUser wxUser);
 }

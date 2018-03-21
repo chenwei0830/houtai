@@ -53,10 +53,6 @@
 								<c:forEach items="${artWorks.imgList}" var="e" varStatus="i">
 									<div class="item ${i.index==0?'active':''}">
 										<img style="height: 400px;width: 100%;" src="${e}" alt="">
-										<!-- <div class="carousel-caption">
-											<h4></h4>
-											<p></p>
-										</div> -->
 									</div>
 								</c:forEach>
 							</div>
@@ -67,15 +63,11 @@
 				</c:when>
 				<c:when test="${artWorks.modelType eq '1'}">
 					<div>
-						<div id="myCarousel" class="carousel slide">
-							<div class="carousel-inner">
-								<c:forEach items="${artWorks.videoList}" var="e" varStatus="i">
-									<div class="item">
-										<video src="${e}" />
-									</div>
-								</c:forEach>
+						<c:forEach items="${artWorks.videoList}" var="e" varStatus="i">
+							<div class="item">
+								<video src="${e}" controls="controls" height="600" width="100%" autoplay="autoplay"/>
 							</div>
-						</div>
+						</c:forEach>
 					</div>
 				</c:when>
 				<c:otherwise></c:otherwise>

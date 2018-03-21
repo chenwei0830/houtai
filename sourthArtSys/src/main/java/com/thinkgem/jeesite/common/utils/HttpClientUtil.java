@@ -440,83 +440,95 @@ public class HttpClientUtil {
 	 * @param args
 	 */
 	public static void main(String[] args) throws Exception {
-
-		String apiUrl = "http://www.artfacts.net/en/artists/top100.html";
+		
 		
 		Map<String,Object> params = new HashMap<String,Object>();
-		params.put("year", "2017");
-		params.put("living", "0");
-		params.put("order", "0");
-		params.put("switch", "0");
-		params.put("x", "4");
-		params.put("y", "12");
-		String result = HttpClientUtil.doPost(apiUrl, params,"ISO-8859-1");
-		Document cDoc = Jsoup.parse(result);
-		Element eBody = cDoc.body();
-		Element eDiv = eBody.getElementById("afn_main");
-		Element eTables = eDiv.getElementsByTag("table").first();
-		Element eTab = eTables.getElementsByTag("table").last();
-		 
-		Elements eTrs = eTab.getElementsByTag("tr");
-		eTrs.remove(0);
-		eTrs.remove(0);
-		 
-		List<Map<String,String>> list = new ArrayList<Map<String,String>>();
-		for(Element e : eTrs) {
-			Element td_1 = e.getElementsByTag("td").get(1);
-			Element td_3 = e.getElementsByTag("td").get(3);
-			Element td_4 = e.getElementsByTag("td").get(4);
-			Map<String,String> map = new HashMap<String,String>();
-			map.put("id", td_1.getElementsByTag("a").first().attr("href").replaceFirst("/index.php/pageType/artistInfo/artist/", ""));
-			map.put("url", "http://www.artfacts.net"+td_1.getElementsByTag("a").first().attr("href"));
-			map.put("name", td_1.getElementsByTag("a").first().text());
-			map.put("date", td_3.text());
-			map.put("Citizenship", td_4.text());
-			list.add(map);
-		}
-		for(int i=0;i<list.size();i++) {
-			Map<String,String> m = list.get(i);
-			String r = HttpClientUtil.doGet(m.get("url"), new HashMap<String,Object>() ,"ISO-8859-1");
-			Document cDoc_2 = Jsoup.parse(r);
-			Element eBody_2 = cDoc_2.body();
-			Element eDiv_2 = eBody_2.getElementById("contents");
-			Element eTable_2 = eDiv_2.getElementsByTag("table").first();
-			Element eTr_2 = eTable_2.getElementsByTag("tr").first();
-			Element eTd_2 = eTr_2.getElementsByTag("td").first();
-			//Artist's arttributes
-			
-			Elements tabs= eTd_2.getElementsByTag("table");
-			for(Element e : tabs) {
-				Elements trs = e.getElementsByTag("tbody").first().getElementsByTag("tr");
-				Element tr_first = trs.first();
-				Element h2 = tr_first.getElementsByTag("h2").first();
-				if(h2!=null) {
-					String text = h2.toString();
-					if(text.contains("Artist's arttributes")) {
-						if(trs.size()==2) {
-							m.put("Gender", trs.get(1).getElementsByTag("td").last().text());
-							m.put("Category", "-");
-							m.put("Movement", "-");
-						}else if(trs.size()==3) {
-							m.put("Gender", trs.get(1).getElementsByTag("td").last().text());
-							m.put("Category", trs.get(2).getElementsByTag("td").last().text());
-							m.put("Movement", "-");
-						}else if(trs.size()==4) {
-							m.put("Gender", trs.get(1).getElementsByTag("td").last().text());
-							m.put("Category", trs.get(2).getElementsByTag("td").last().text());
-							m.put("Movement", trs.get(3).getElementsByTag("td").last().text());
-						}else {
-							m.put("Gender", "-");
-							m.put("Category", "-");
-							m.put("Movement", "-");
-						}
-						break;
-					}
-					
-				}
-			}
-			System.out.println("第"+(i+1)+"位:"+JsonMapper.toJsonString(m));
-		}
-		System.out.println(JsonMapper.toJsonString(list));
+		params.put("title", "hahah");
+		params.put("modelType", "0");
+		params.put("artType", "1");
+		params.put("openId", "xxxxxxxxxxxx");
+		params.put("orgId", "2");
+		params.put("textContent", "assadsadsdas");
+		String apiUrl = "https://www.chenqimao.com/sourthArtSys/api/auth";
+		String result = HttpClientUtil.doGet(apiUrl);
+//		String result = HttpClientUtil.doPostSSL(apiUrl, JsonMapper.toJsonString(params));
+		System.out.println(result);
+//		String apiUrl = "http://www.artfacts.net/en/artists/top100.html";
+//		
+//		Map<String,Object> params = new HashMap<String,Object>();
+//		params.put("year", "2017");
+//		params.put("living", "0");
+//		params.put("order", "0");
+//		params.put("switch", "0");
+//		params.put("x", "4");
+//		params.put("y", "12");
+//		String result = HttpClientUtil.doPost(apiUrl, params,"ISO-8859-1");
+//		Document cDoc = Jsoup.parse(result);
+//		Element eBody = cDoc.body();
+//		Element eDiv = eBody.getElementById("afn_main");
+//		Element eTables = eDiv.getElementsByTag("table").first();
+//		Element eTab = eTables.getElementsByTag("table").last();
+//		 
+//		Elements eTrs = eTab.getElementsByTag("tr");
+//		eTrs.remove(0);
+//		eTrs.remove(0);
+//		 
+//		List<Map<String,String>> list = new ArrayList<Map<String,String>>();
+//		for(Element e : eTrs) {
+//			Element td_1 = e.getElementsByTag("td").get(1);
+//			Element td_3 = e.getElementsByTag("td").get(3);
+//			Element td_4 = e.getElementsByTag("td").get(4);
+//			Map<String,String> map = new HashMap<String,String>();
+//			map.put("id", td_1.getElementsByTag("a").first().attr("href").replaceFirst("/index.php/pageType/artistInfo/artist/", ""));
+//			map.put("url", "http://www.artfacts.net"+td_1.getElementsByTag("a").first().attr("href"));
+//			map.put("name", td_1.getElementsByTag("a").first().text());
+//			map.put("date", td_3.text());
+//			map.put("Citizenship", td_4.text());
+//			list.add(map);
+//		}
+//		for(int i=0;i<list.size();i++) {
+//			Map<String,String> m = list.get(i);
+//			String r = HttpClientUtil.doGet(m.get("url"), new HashMap<String,Object>() ,"ISO-8859-1");
+//			Document cDoc_2 = Jsoup.parse(r);
+//			Element eBody_2 = cDoc_2.body();
+//			Element eDiv_2 = eBody_2.getElementById("contents");
+//			Element eTable_2 = eDiv_2.getElementsByTag("table").first();
+//			Element eTr_2 = eTable_2.getElementsByTag("tr").first();
+//			Element eTd_2 = eTr_2.getElementsByTag("td").first();
+//			//Artist's arttributes
+//			
+//			Elements tabs= eTd_2.getElementsByTag("table");
+//			for(Element e : tabs) {
+//				Elements trs = e.getElementsByTag("tbody").first().getElementsByTag("tr");
+//				Element tr_first = trs.first();
+//				Element h2 = tr_first.getElementsByTag("h2").first();
+//				if(h2!=null) {
+//					String text = h2.toString();
+//					if(text.contains("Artist's arttributes")) {
+//						if(trs.size()==2) {
+//							m.put("Gender", trs.get(1).getElementsByTag("td").last().text());
+//							m.put("Category", "-");
+//							m.put("Movement", "-");
+//						}else if(trs.size()==3) {
+//							m.put("Gender", trs.get(1).getElementsByTag("td").last().text());
+//							m.put("Category", trs.get(2).getElementsByTag("td").last().text());
+//							m.put("Movement", "-");
+//						}else if(trs.size()==4) {
+//							m.put("Gender", trs.get(1).getElementsByTag("td").last().text());
+//							m.put("Category", trs.get(2).getElementsByTag("td").last().text());
+//							m.put("Movement", trs.get(3).getElementsByTag("td").last().text());
+//						}else {
+//							m.put("Gender", "-");
+//							m.put("Category", "-");
+//							m.put("Movement", "-");
+//						}
+//						break;
+//					}
+//					
+//				}
+//			}
+//			System.out.println("第"+(i+1)+"位:"+JsonMapper.toJsonString(m));
+//		}
+//		System.out.println(JsonMapper.toJsonString(list));
 	}
 }

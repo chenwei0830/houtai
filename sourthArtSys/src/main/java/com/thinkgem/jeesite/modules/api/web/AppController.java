@@ -1,6 +1,7 @@
 package com.thinkgem.jeesite.modules.api.web;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,22 +48,23 @@ public class AppController {
 	@RequestMapping(value = {"login"},method = RequestMethod.POST)
 	public AppJson login(@RequestBody WxUser wxUser) {
 		
-		if(wxUser!=null && StringUtils.isNotBlank(wxUser.getOpenId())) {
+		if(wxUser!=null && StringUtils.isNotBlank(wxUser.getOpenId()) 
+				&& StringUtils.isNotBlank(wxUser.getOrgId())) {
 			//根据unionId判断是否已注册,未注册先插入数据
-			User u = appService.getUserByOpenId(wxUser.getOpenId());
+			User u = appService.getUserByOpenId(wxUser.getOpenId(),wxUser.getOrgId());
 			if(u!=null) {
 				//更新昵称+头像
+				wxUser.setUpdateDate(new Date());
 				appService.updateUserByOpenId(wxUser);
 				return new AppJson("0","登录成功",null);
 			}else {
-				int a = appService.register(wxUser);
+				int a = appService.registerXcx(wxUser);
 				if(a>0) {
 					return new AppJson("0","注册-登录成功",null);
 				}else {
 					return new AppJson("-1","注册失败-未登录",null);
 				}
 			}
-			//将数据库openId字段换成unionId
 		}else {
 			return new AppJson("-1","缺少必要参数",null);
 		}
@@ -87,6 +89,10 @@ public class AppController {
 			params.put("grant_type", WeXinConfig.WX_GRANT_TYPE);
 			String result = HttpClientUtil.doPostSSL(WeXinConfig.WX_URL_JSCODE_2_SESSION, params);
 			wxResult = (WxResult) JsonMapper.fromJsonString(result, WxResult.class);
+			if(StringUtils.isNotBlank(wxResult.getOpenid())) {
+				//校验是否已注册，未注册进行注册
+				
+			}
 		}else {
 			wxResult.setErrcode("40029");
 			wxResult.setErrmsg("invalid code");
@@ -109,6 +115,18 @@ public class AppController {
 		
 		
 		return jon;
+	}
+	
+	
+	/**
+	 * 个人中心 获取作品数、收藏、关注
+	 */
+	@ResponseBody
+	@RequestMapping(value = {"mine"},method = RequestMethod.GET)
+	public AppJson saveArtworks(@RequestParam String openId) {
+		
+		
+		return new AppJson("保存作品失败");
 	}
 	
 	

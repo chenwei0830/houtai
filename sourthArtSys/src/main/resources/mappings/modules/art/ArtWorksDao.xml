@@ -155,8 +155,4 @@
 			remarks = #{remarks}
 		WHERE id = #{id}
 	</update>
-	
-	<update id="delete">
-	</update>
-	
 </mapper>
