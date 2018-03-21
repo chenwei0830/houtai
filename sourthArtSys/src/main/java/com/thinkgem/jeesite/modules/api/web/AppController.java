@@ -21,6 +21,7 @@ import com.thinkgem.jeesite.common.mapper.JsonMapper;
 import com.thinkgem.jeesite.common.utils.HttpClientUtil;
 import com.thinkgem.jeesite.common.utils.QiNiuUtils;
 import com.thinkgem.jeesite.modules.api.entity.AppJson;
+import com.thinkgem.jeesite.modules.api.entity.MineArtWorks;
 import com.thinkgem.jeesite.modules.api.entity.WxResult;
 import com.thinkgem.jeesite.modules.api.entity.WxUser;
 import com.thinkgem.jeesite.modules.api.service.AppService;
@@ -89,10 +90,6 @@ public class AppController {
 			params.put("grant_type", WeXinConfig.WX_GRANT_TYPE);
 			String result = HttpClientUtil.doPostSSL(WeXinConfig.WX_URL_JSCODE_2_SESSION, params);
 			wxResult = (WxResult) JsonMapper.fromJsonString(result, WxResult.class);
-			if(StringUtils.isNotBlank(wxResult.getOpenid())) {
-				//校验是否已注册，未注册进行注册
-				
-			}
 		}else {
 			wxResult.setErrcode("40029");
 			wxResult.setErrmsg("invalid code");
@@ -125,9 +122,19 @@ public class AppController {
 	@RequestMapping(value = {"mine"},method = RequestMethod.GET)
 	public AppJson saveArtworks(@RequestParam String openId) {
 		
-		
-		return new AppJson("保存作品失败");
+		return new AppJson(appService.getMineCountInfo(openId));
 	}
+	
+	/**
+	 * 个人中心-我的作品列表
+	 */
+	@ResponseBody
+	@RequestMapping(value = {"mine/artworks/list"},method = RequestMethod.GET)
+	public AppJson mineArtWorksList(MineArtWorks mineArtWorks) {
+		
+		return new AppJson(appService.getMineArtWorksList(mineArtWorks));
+	}
+	
 	
 	
 	/**
@@ -142,19 +149,6 @@ public class AppController {
 		}else {
 			return new AppJson("保存作品失败");
 		}
-	}
-	
-	
-	
-	
-	/**
-	 * 认证审核状态:返回等待审核的条数
-	 */
-	@ResponseBody
-	@RequestMapping(value = {"authStatus"},method = RequestMethod.GET)
-	public AppJson authStatus(@RequestParam String openId) {
-		int a = appService.authStatus(openId);
-		return new AppJson(a);
 	}
 	
 	

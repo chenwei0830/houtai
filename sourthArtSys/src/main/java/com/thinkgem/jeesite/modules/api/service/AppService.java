@@ -13,6 +13,7 @@ import com.thinkgem.jeesite.common.utils.IdGen;
 import com.thinkgem.jeesite.common.utils.IdcardUtils;
 import com.thinkgem.jeesite.common.utils.PhoneUtils;
 import com.thinkgem.jeesite.modules.api.entity.ArtWorksVo;
+import com.thinkgem.jeesite.modules.api.entity.MineArtWorks;
 import com.thinkgem.jeesite.modules.api.entity.MineWorksAndInterest;
 import com.thinkgem.jeesite.modules.api.entity.WxUser;
 import com.thinkgem.jeesite.modules.art.dao.ArtAuthDao;
@@ -84,9 +85,12 @@ public class AppService {
 				&& StringUtils.isNotBlank(artAuth.getArtLevel())
 				&& !artAuth.getrList().isEmpty()
 				&& StringUtils.isNotBlank(artAuth.getOrgId())) {
-			
+			User user = userDao.getByOpenId(artAuth.getOpenId(),artAuth.getOrgId());
 			//插入主记录
 			artAuth.preInsert();
+			artAuth.setUpdateBy(user);
+			artAuth.setCreateBy(user);
+			artAuth.setUser(user);
 			artAuth.setStatus("0");//强制设置为'0'-待审核状态
 			artAuth.setOrg(new Org(artAuth.getOrgId()));
 			int a = artAuthDao.insert(artAuth);
@@ -106,15 +110,6 @@ public class AppService {
 		
 		return false;
 	}
-	
-	/**
-	 * 查询认证审核状态
-	 * @return
-	 */
-	public int authStatus(String openId) {
-		return artAuthDao.authStatus(openId);
-	}
-	
 	
 	
 	/**
@@ -196,8 +191,13 @@ public class AppService {
 	/**
 	 * 个人中心 获取作品数、收藏、关注
 	 */
-	public List<MineWorksAndInterest> getMineCountInfo(String openId) {
-		return artWorksDao.getMineCountInfo(openId);
+	public MineWorksAndInterest getMineCountInfo(String openId) {
+		
+		List<Integer> list = artWorksDao.getMineCountInfo(openId);
+		if(list!=null && list.size()==5) {
+			return new MineWorksAndInterest(list.get(0),list.get(1),list.get(2),list.get(3),list.get(4));
+		}
+		return new MineWorksAndInterest();
 	}
 	
 	
@@ -210,5 +210,12 @@ public class AppService {
 		wxUser.setCreateDate(new Date());
 		wxUser.setUpdateDate(new Date());
 		return userDao.registerXcx(wxUser);
+	}
+	
+	/**
+	 * 获取我的作品列表
+	 */
+	public List<MineArtWorks> getMineArtWorksList(MineArtWorks mineArtWorks){
+		return artWorksDao.getMineArtWorksList(mineArtWorks);
 	}
 }

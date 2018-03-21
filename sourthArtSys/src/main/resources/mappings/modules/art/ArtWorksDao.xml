@@ -155,4 +155,41 @@
 			remarks = #{remarks}
 		WHERE id = #{id}
 	</update>
+	
+	<select id="getMineCountInfo" resultType="java.lang.Integer">
+		SELECT count(1) FROM art_works a ,sys_user b where a.user_id=b.id and b.open_id=#{openId} and a.del_flag='0' 
+		UNION ALL
+		SELECT count(1) FROM art_works a ,sys_user b where a.user_id=b.id and b.open_id=#{openId} and a.del_flag='0' and a.status='0' 
+		UNION ALL
+		SELECT count(1) FROM user_artworks_collect a ,sys_user b where a.user_id=b.id and b.open_id=#{openId}
+		UNION ALL
+		SELECT count(1) FROM user_art_interest a ,sys_user b where a.user_id=b.id and b.open_id=#{openId}
+		UNION ALL
+		SELECT count(1)  FROM sys_user_auth a ,sys_user b WHERE a.user_id=b.id and b.open_id=#{openId} and a.status='0' and a.del_flag='0'
+	</select>
+	
+	<!-- 获取我的作品 -->
+	<select id="getMineArtWorksList" resultType="com.thinkgem.jeesite.modules.api.entity.MineArtWorks">
+		SELECT
+			a.id,
+			a.title,
+			a.location,
+			a.model_type AS "modelType",
+			a.status,
+			CASE WHEN a.model_type='0' THEN (SELECT b.content FROM art_works_content b where b.art_works_id=a.id and b.file_type='0' LIMIT 0,1)
+				WHEN a.model_type='1' THEN (SELECT b.content FROM art_works_content b where b.art_works_id=a.id and b.file_type='1' LIMIT 0,1)
+			else (SELECT b.content FROM art_works_content b where b.art_works_id=a.id and b.file_type='2' LIMIT 0,1) END AS "content",
+			a.dz_num AS "dzNum",
+			CASE WHEN a.status='1' THEN (SELECT count(*) FROM art_works_comment v WHERE v.art_works_id=a.id)
+			ELSE 0 END AS "plNum",
+			a.create_date AS "createDate"
+		FROM
+			art_works a,
+			sys_user c
+		WHERE
+		a.user_id = c.id
+		AND c.open_id = #{openId}
+		AND a.del_flag = '0'
+		ORDER BY a.create_date DESC
+	</select>
 </mapper>

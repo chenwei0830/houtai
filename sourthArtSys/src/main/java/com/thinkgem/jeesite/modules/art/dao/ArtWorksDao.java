@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.thinkgem.jeesite.common.persistence.CrudDao;
 import com.thinkgem.jeesite.common.persistence.annotation.MyBatisDao;
-import com.thinkgem.jeesite.modules.api.entity.MineWorksAndInterest;
+import com.thinkgem.jeesite.modules.api.entity.MineArtWorks;
 import com.thinkgem.jeesite.modules.art.entity.ArtWorks;
 import com.thinkgem.jeesite.modules.art.entity.ArtWorksContent;
 
@@ -19,5 +19,7 @@ public interface ArtWorksDao extends CrudDao<ArtWorks>{
 
 	int insertArtWorkContent(ArtWorksContent art);
 	
-	List<MineWorksAndInterest> getMineCountInfo(@Param("openId")String openId);
+	List<Integer> getMineCountInfo(@Param("openId")String openId);
+	
+	List<MineArtWorks> getMineArtWorksList(MineArtWorks mineArtWorks);
 }

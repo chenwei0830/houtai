@@ -79,7 +79,7 @@
 	<insert id="insert">
 		INSERT INTO sys_user_auth(
 			id,
-			open_id,
+			user_id,
 			name,
 			id_card,
 			phone,
@@ -97,7 +97,7 @@
 			del_flag
 		) VALUES (
 			#{id},
-			#{openId},
+			#{user.id},
 			#{name},
 			#{idCard},
 			#{phone},
@@ -143,7 +143,4 @@
 		WHERE id = #{id}
 	</update>
 	
-	<select id="authStatus" resultType="java.lang.Integer">
-		SELECT count(a.id)  FROM sys_user_auth a WHERE a.open_id=#{openId} and a.status='0' and a.del_flag='0'
-	</select>
 </mapper>

@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.thinkgem.jeesite.common.persistence.DataEntity;
+import com.thinkgem.jeesite.modules.sys.entity.User;
 
 /**
  * 艺术认证Entity
@@ -23,7 +24,7 @@ public class ArtAuth extends DataEntity<ArtAuth>{
 	private String feePayStatus;	//认证费用支付状态
 	private String feePayNo;		//认证费用支付订单号
 	private List<ArtAuthImg> imgList;	//认证图片
-	
+	private User user;				//用户
 	
 	private List<String> rList;		//认证图片(只包含URL)
 	
@@ -120,5 +121,11 @@ public class ArtAuth extends DataEntity<ArtAuth>{
 	}
 	public void setrList(List<String> rList) {
 		this.rList = rList;
+	}
+	public User getUser() {
+		return user;
+	}
+	public void setUser(User user) {
+		this.user = user;
 	}
 }
