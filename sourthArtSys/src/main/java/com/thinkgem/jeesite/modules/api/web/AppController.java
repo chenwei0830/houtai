@@ -215,4 +215,33 @@ public class AppController {
 		map.put("uptoken", token);
 		return map;
 	}
+	
+	/**
+	 * 获取短信验证码
+	 */
+	@ResponseBody
+	@RequestMapping(value = {"getAuthCode"},method = RequestMethod.GET)
+	public Map<String,String> getAuthCode(@RequestParam String openId){
+		
+		//校验是否在黑名单
+		
+		//清理未使用的验证码
+		
+		//重新生产验证码
+		
+		
+		return null;
+	}
+	
+	
+	/**
+	 * 根据ID获取作品详情
+	 */
+	@ResponseBody
+	@RequestMapping(value = {"getArtWorksDetail"},method = RequestMethod.GET)
+	public Map<String,String> getArtWorksDetail(){
+		
+		return null;
+	}
+	
 }

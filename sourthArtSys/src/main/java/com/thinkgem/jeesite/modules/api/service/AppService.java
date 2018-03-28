@@ -62,6 +62,7 @@ public class AppService {
 	/**
 	 * 根据openId更新用户
 	 */
+	@Transactional(readOnly = false)
 	public int updateUserByOpenId(WxUser wxUser) {
 		return userDao.updateUserByOpenId(wxUser);
 	}
@@ -218,4 +219,12 @@ public class AppService {
 	public List<MineArtWorks> getMineArtWorksList(MineArtWorks mineArtWorks){
 		return artWorksDao.getMineArtWorksList(mineArtWorks);
 	}
+	
+	/**
+	 * 作废未使用的短信验证码
+	 */
+	public void toVoidMsgCode(String openId) {
+		
+	}
+	
 }
