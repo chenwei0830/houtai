@@ -12,9 +12,11 @@ import com.thinkgem.jeesite.common.config.Global;
 import com.thinkgem.jeesite.common.utils.IdGen;
 import com.thinkgem.jeesite.common.utils.IdcardUtils;
 import com.thinkgem.jeesite.common.utils.PhoneUtils;
+import com.thinkgem.jeesite.modules.api.dao.AppDao;
 import com.thinkgem.jeesite.modules.api.entity.ArtWorksVo;
 import com.thinkgem.jeesite.modules.api.entity.MineArtWorks;
 import com.thinkgem.jeesite.modules.api.entity.MineWorksAndInterest;
+import com.thinkgem.jeesite.modules.api.entity.MsgCode;
 import com.thinkgem.jeesite.modules.api.entity.WxUser;
 import com.thinkgem.jeesite.modules.art.dao.ArtAuthDao;
 import com.thinkgem.jeesite.modules.art.dao.ArtWorksDao;
@@ -43,6 +45,10 @@ public class AppService {
 	
 	@Autowired
 	private ArtWorksDao artWorksDao;
+	
+	@Autowired
+	private AppDao appDao;
+	
 	/**
 	 * 根据艺术类别获取列表
 	 */
@@ -223,8 +229,16 @@ public class AppService {
 	/**
 	 * 作废未使用的短信验证码
 	 */
-	public void toVoidMsgCode(String openId) {
-		
+	@Transactional(readOnly = false)
+	public void toVoidMsgCode(String phone) {
+		appDao.toVoidMsgCode(phone);
 	}
 	
+	/**
+	 * 插入新短信验证码
+	 */
+	@Transactional(readOnly = false)
+	public int insertMsgCode(MsgCode msgCode) {
+		return appDao.insertMsgCode(msgCode);
+	}
 }

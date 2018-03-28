@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,10 +20,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.thinkgem.jeesite.common.config.WeXinConfig;
 import com.thinkgem.jeesite.common.mapper.JsonMapper;
+import com.thinkgem.jeesite.common.utils.DateUtils;
 import com.thinkgem.jeesite.common.utils.HttpClientUtil;
+import com.thinkgem.jeesite.common.utils.IdGen;
 import com.thinkgem.jeesite.common.utils.QiNiuUtils;
+import com.thinkgem.jeesite.common.utils.SendMsgUtils;
 import com.thinkgem.jeesite.modules.api.entity.AppJson;
 import com.thinkgem.jeesite.modules.api.entity.MineArtWorks;
+import com.thinkgem.jeesite.modules.api.entity.MsgCode;
 import com.thinkgem.jeesite.modules.api.entity.WxResult;
 import com.thinkgem.jeesite.modules.api.entity.WxUser;
 import com.thinkgem.jeesite.modules.api.service.AppService;
@@ -38,7 +44,9 @@ import com.thinkgem.jeesite.modules.sys.utils.DictUtils;
 @Controller
 @RequestMapping(value = "api")
 public class AppController {
-
+	
+	protected Logger logger = LoggerFactory.getLogger(getClass());
+	
 	@Autowired
 	private AppService appService;
 	
@@ -221,16 +229,27 @@ public class AppController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = {"getAuthCode"},method = RequestMethod.GET)
-	public Map<String,String> getAuthCode(@RequestParam String openId){
+	public Map<String,String> getAuthCode(@RequestParam(required=true) String phone){
 		
+		Map<String,String> map = new HashMap<String,String>();
+		map.put("code", "-1");
 		//校验是否在黑名单
-		
 		//清理未使用的验证码
-		
+		appService.toVoidMsgCode(phone);
 		//重新生产验证码
-		
-		
-		return null;
+		String code = SendMsgUtils.randomDigits4();
+		MsgCode msgCode = new MsgCode(IdGen.uuid(),code,phone,"0");
+		int a = appService.insertMsgCode(msgCode);
+		if(a>0) {
+			String st = SendMsgUtils.smsAuthCode(phone, code);
+			if(Integer.valueOf(st)>0) {
+				map.put("code", code);
+				logger.info(phone+"--验证码:"+code+"发送成功--"+DateUtils.getDate("yyyy-MM-dd HH:mm:ss"));
+			}else {
+				logger.info(phone+"--验证码:"+code+"发送失败--"+DateUtils.getDate("yyyy-MM-dd HH:mm:ss"));
+			}
+		}
+		return map;
 	}
 	
 	

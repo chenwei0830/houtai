@@ -2,19 +2,21 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.thinkgem.jeesite.modules.api.dao.AppDao">
     
-	<update id="update">
-		UPDATE sys_user_auth SET
-			status = #{status},
-			update_by = #{updateBy.id},
-			update_date = #{updateDate},
-			remarks = #{remarks}
-		WHERE id = #{id}
+	<update id="toVoidMsgCode">
+		UPDATE sys_msg_code SET status = '-1' WHERE phone = #{phone}
 	</update>
 	
-	<update id="delete">
-		UPDATE sys_user_auth SET
-			del_flag = #{DEL_FLAG_DELETE}
-		WHERE id = #{id}
-	</update>
-	
+	<insert id="insertMsgCode">
+		INSERT INTO sys_msg_code(
+			id,
+			phone,
+			code,
+			status
+		)VALUES(
+			#{id},
+			#{phone},
+			#{code},
+			#{status}
+		)
+	</insert>
 </mapper>
