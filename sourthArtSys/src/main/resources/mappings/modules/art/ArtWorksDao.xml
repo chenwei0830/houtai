@@ -178,7 +178,8 @@
 			a.status,
 			CASE WHEN a.model_type='0' THEN (SELECT b.content FROM art_works_content b where b.art_works_id=a.id and b.file_type='0' LIMIT 0,1)
 				WHEN a.model_type='1' THEN (SELECT b.content FROM art_works_content b where b.art_works_id=a.id and b.file_type='1' LIMIT 0,1)
-			else (SELECT b.content FROM art_works_content b where b.art_works_id=a.id and b.file_type='2' LIMIT 0,1) END AS "content",
+			else '' END AS "mediaUrl",
+			(SELECT t.content FROM art_works_content t where t.art_works_id=a.id and t.file_type='2' LIMIT 0,1) AS "content",
 			a.dz_num AS "dzNum",
 			CASE WHEN a.status='1' THEN (SELECT count(*) FROM art_works_comment v WHERE v.art_works_id=a.id)
 			ELSE 0 END AS "plNum",
@@ -192,4 +193,55 @@
 		AND a.del_flag = '0'
 		ORDER BY a.create_date DESC
 	</select>
+	
+	<select id="geArtWorksDetailById" resultType="com.thinkgem.jeesite.modules.api.entity.ArtWorksVo">
+		SELECT
+			a.id,
+			a.user_id AS "user.id",
+			a.title,
+			a.location,
+			a.model_type AS "modelType",
+			a.status,
+			a.dz_num AS "dzNum",
+			CASE WHEN a.status='1' THEN (SELECT count(*) FROM art_works_comment v WHERE v.art_works_id=a.id)
+			ELSE 0 END AS "plNum",
+			a.create_date AS "createDate"
+		FROM
+			art_works a
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="getArtWorksContentListByWorksId" resultType="com.thinkgem.jeesite.modules.art.entity.ArtWorksContent">
+		SELECT
+			a.id,
+			a.art_works_id AS "artWorksId",
+			a.content,
+			a.file_type AS "fileType"
+		FROM
+			art_works_content a
+		WHERE
+			a.art_works_id = #{artWorksId}
+		ORDER BY a.file_type
+	</select>
+	
+	<select id="getArtWorksCommentList" resultType="com.thinkgem.jeesite.modules.api.entity.CommentVo">
+		SELECT
+			b.id AS "userId",
+			b.nick_name AS "nickName",
+			b.photo,
+			b.art_type AS "artType",
+			b.art_level AS "artLevel",
+			a.create_date AS "createDate",
+			a.content,
+			a.dz_num AS "dzNum",
+			(SELECT count(*) FROM art_works_comment c where c.partent=#{artWorksId} and c.status='1' and c.del_flag='0') AS "msgNum",
+			CASE WHEN b.user_type is not null and b.art_level is not null then '1' else '0' end as "msgType"
+		FROM
+			art_works_comment a,
+			sys_user b
+		WHERE
+			a.art_works_id = #{artWorksId}
+		AND a.create_by = b.id
+	</select>
+	
 </mapper>

@@ -1,40 +1,36 @@
 package com.thinkgem.jeesite.modules.api.entity;
 
+import java.util.Date;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.thinkgem.jeesite.modules.art.entity.ArtWorksContent;
 
 /**
  * 艺术作品Entity
  */
 public class ArtWorksVo {
 
-	private String id;				//作品ID
-	private String showModel;		//展示模式: '0'-图文 '1'-视频+文  '2'-纯文
-	private String title;			//作品标题
-	private String content;			//作品内容: 图文=图片URL 视频+文=视频URL 纯文=文本
-	private String location;		//作品发布时定位
-	private String createDate;		//创建时间
-	private String monthDay;		//作品发布 日期
-	private String hourMin;			//作品发布 时间
-	private int msgNum;				//留言数
-	private int dzNum;				//点赞数
-	
-	private String orgId;			//组织机构ID
-	
-	private UserVo author;			//作者
-	private List<CommentVo> hotCommentList;	//热门评论
-	
-	
+	private String id;
+	private String title; 				// 标题
+	private String modelType; 			// 作品展示模型 '0'-图文 '1'-视频+文  '2'-纯文
+	private UserVo user; 				// 作者ID
+	private String status;				//审核状态 '0'-待审核  '1'-审核通过 '2'-审核不通过
+	private Date createDate;			//创建日期
+	private String location;			//定位
+	private List<ArtWorksContent> contentList;//内容详情
+	private List<String> imgList;		//图片List
+	private List<String> videoList;		//视频List
+	private String textContent;			//文本内容
+	private int plNum;					//评论数(已通过审核的)
+	private int dzNum;					//点赞数
+	private List<CommentVo> artCommmentList;//艺术家评论
+	private List<CommentVo> commonCommmentList;//普通评论
 	public String getId() {
 		return id;
 	}
 	public void setId(String id) {
 		this.id = id;
-	}
-	public String getShowModel() {
-		return showModel;
-	}
-	public void setShowModel(String showModel) {
-		this.showModel = showModel;
 	}
 	public String getTitle() {
 		return title;
@@ -42,11 +38,30 @@ public class ArtWorksVo {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	public String getContent() {
-		return content;
+	public String getModelType() {
+		return modelType;
 	}
-	public void setContent(String content) {
-		this.content = content;
+	public void setModelType(String modelType) {
+		this.modelType = modelType;
+	}
+	public UserVo getUser() {
+		return user;
+	}
+	public void setUser(UserVo user) {
+		this.user = user;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	@JsonFormat(pattern="yyyy/MM/dd HH:mm")
+	public Date getCreateDate() {
+		return createDate;
+	}
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
 	}
 	public String getLocation() {
 		return location;
@@ -54,23 +69,35 @@ public class ArtWorksVo {
 	public void setLocation(String location) {
 		this.location = location;
 	}
-	public String getMonthDay() {
-		return monthDay;
+	public List<ArtWorksContent> getContentList() {
+		return contentList;
 	}
-	public void setMonthDay(String monthDay) {
-		this.monthDay = monthDay;
+	public void setContentList(List<ArtWorksContent> contentList) {
+		this.contentList = contentList;
 	}
-	public String getHourMin() {
-		return hourMin;
+	public List<String> getImgList() {
+		return imgList;
 	}
-	public void setHourMin(String hourMin) {
-		this.hourMin = hourMin;
+	public void setImgList(List<String> imgList) {
+		this.imgList = imgList;
 	}
-	public int getMsgNum() {
-		return msgNum;
+	public List<String> getVideoList() {
+		return videoList;
 	}
-	public void setMsgNum(int msgNum) {
-		this.msgNum = msgNum;
+	public void setVideoList(List<String> videoList) {
+		this.videoList = videoList;
+	}
+	public String getTextContent() {
+		return textContent;
+	}
+	public void setTextContent(String textContent) {
+		this.textContent = textContent;
+	}
+	public int getPlNum() {
+		return plNum;
+	}
+	public void setPlNum(int plNum) {
+		this.plNum = plNum;
 	}
 	public int getDzNum() {
 		return dzNum;
@@ -78,28 +105,16 @@ public class ArtWorksVo {
 	public void setDzNum(int dzNum) {
 		this.dzNum = dzNum;
 	}
-	public String getOrgId() {
-		return orgId;
+	public List<CommentVo> getArtCommmentList() {
+		return artCommmentList;
 	}
-	public void setOrgId(String orgId) {
-		this.orgId = orgId;
+	public void setArtCommmentList(List<CommentVo> artCommmentList) {
+		this.artCommmentList = artCommmentList;
 	}
-	public UserVo getAuthor() {
-		return author;
+	public List<CommentVo> getCommonCommmentList() {
+		return commonCommmentList;
 	}
-	public void setAuthor(UserVo author) {
-		this.author = author;
-	}
-	public List<CommentVo> getHotCommentList() {
-		return hotCommentList;
-	}
-	public void setHotCommentList(List<CommentVo> hotCommentList) {
-		this.hotCommentList = hotCommentList;
-	}
-	public String getCreateDate() {
-		return createDate;
-	}
-	public void setCreateDate(String createDate) {
-		this.createDate = createDate;
+	public void setCommonCommmentList(List<CommentVo> commonCommmentList) {
+		this.commonCommmentList = commonCommmentList;
 	}
 }

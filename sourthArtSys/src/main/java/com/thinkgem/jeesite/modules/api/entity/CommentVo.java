@@ -1,5 +1,7 @@
 package com.thinkgem.jeesite.modules.api.entity;
 
+import java.util.Date;
+
 /**
  * 评论
  */
@@ -8,16 +10,35 @@ public class CommentVo {
 	private String id;		 	//评论ID
 	private String content;		//评论内容
 	private String userId;		//评论人ID
-	private String name;		//评论人名称
+	private String nickName;		//评论人名称
 	private String photo;		//评论人头像
 	private String artType;		//评论人艺术类别
 	private String artLevel;	//评论人艺术级别
-	private String monthDay;	//评论发布 日期
-	private String hourMin;		//评论发布 时间
+	private Date createDate;	//评论时间
 	private int msgNum;			//评论留言数
 	private int dzNum;			//评论点赞数
+	private String msgType;		//评论类型 '1'-艺术家 '0'-普通
 	
 	
+	
+	public String getMsgType() {
+		return msgType;
+	}
+	public void setMsgType(String msgType) {
+		this.msgType = msgType;
+	}
+	public String getNickName() {
+		return nickName;
+	}
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
+	}
+	public Date getCreateDate() {
+		return createDate;
+	}
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
 	public String getId() {
 		return id;
 	}
@@ -36,12 +57,6 @@ public class CommentVo {
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
 	public String getPhoto() {
 		return photo;
 	}
@@ -59,18 +74,6 @@ public class CommentVo {
 	}
 	public void setArtLevel(String artLevel) {
 		this.artLevel = artLevel;
-	}
-	public String getMonthDay() {
-		return monthDay;
-	}
-	public void setMonthDay(String monthDay) {
-		this.monthDay = monthDay;
-	}
-	public String getHourMin() {
-		return hourMin;
-	}
-	public void setHourMin(String hourMin) {
-		this.hourMin = hourMin;
 	}
 	public int getMsgNum() {
 		return msgNum;

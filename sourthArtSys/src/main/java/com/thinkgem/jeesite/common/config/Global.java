@@ -72,6 +72,10 @@ public class Global {
 	 */
 	public static final String COM_ROLE_ADMIN_ID = "com_role_admin_id";
 	
+	/**
+	 * 普通用户角色
+	 */
+	public static final String USER_ROLE_ID = "user_role_id";
 	
 	/**
 	 * 上传文件基础虚拟路径

@@ -26,6 +26,7 @@ import com.thinkgem.jeesite.common.utils.IdGen;
 import com.thinkgem.jeesite.common.utils.QiNiuUtils;
 import com.thinkgem.jeesite.common.utils.SendMsgUtils;
 import com.thinkgem.jeesite.modules.api.entity.AppJson;
+import com.thinkgem.jeesite.modules.api.entity.ArtWorksVo;
 import com.thinkgem.jeesite.modules.api.entity.MineArtWorks;
 import com.thinkgem.jeesite.modules.api.entity.MsgCode;
 import com.thinkgem.jeesite.modules.api.entity.WxResult;
@@ -258,9 +259,9 @@ public class AppController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = {"getArtWorksDetail"},method = RequestMethod.GET)
-	public Map<String,String> getArtWorksDetail(){
-		
-		return null;
+	public AppJson getArtWorksDetail(@RequestParam String id){
+		ArtWorksVo artWorks = appService.geArtWorksDetailById(id);
+		return new AppJson(artWorks);
 	}
 	
 }

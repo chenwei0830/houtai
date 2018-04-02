@@ -43,7 +43,7 @@
 		<div class="control-group">
 			<label class="control-label">昵称:</label>
 			<div class="controls">
-				<form:input path="name" htmlEscape="false" maxlength="50" class="required"/>
+				<form:input path="nickName" htmlEscape="false" maxlength="50" class="required"/>
 				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
@@ -71,21 +71,9 @@
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">邮箱:</label>
-			<div class="controls">
-				<form:input path="email" htmlEscape="false" maxlength="100" class="email"/>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">电话:</label>
+			<label class="control-label">手机号:</label>
 			<div class="controls">
 				<form:input path="phone" htmlEscape="false" maxlength="100"/>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">手机:</label>
-			<div class="controls">
-				<form:input path="mobile" htmlEscape="false" maxlength="100"/>
 			</div>
 		</div>
 		<div class="control-group">

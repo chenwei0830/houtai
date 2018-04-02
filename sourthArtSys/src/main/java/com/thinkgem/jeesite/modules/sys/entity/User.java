@@ -35,7 +35,8 @@ public class User extends DataEntity<User> {
 	private String province;		// 用户所在省份
 	private String country;			// 用户所在国家
 	private String language;		// 用户的语言，简体中文为zh_CN
-
+	private String artType;			//艺术分类
+	private String artLevel;		//艺术家级别
 	private String userType;		// 用户类型   '0'-系统用户   '1'-认证用户  '-1'-未认证用户
 	private String loginIp;			// 最后登陆IP
 	private Date loginDate;			// 最后登陆日期
@@ -263,6 +264,7 @@ public class User extends DataEntity<User> {
 		return Collections3.extractToString(roleList, "name", ",");
 	}
 	
+	@JsonIgnore
 	public boolean isAdmin(){
 		if(StringUtils.equals(this.getRole().getId(), Global.SYS_ROLE_ADMIN_ID)) {
 			return true;
@@ -312,5 +314,21 @@ public class User extends DataEntity<User> {
 
 	public void setLanguage(String language) {
 		this.language = language;
+	}
+	
+	public String getArtType() {
+		return artType;
+	}
+
+	public void setArtType(String artType) {
+		this.artType = artType;
+	}
+
+	public String getArtLevel() {
+		return artLevel;
+	}
+
+	public void setArtLevel(String artLevel) {
+		this.artLevel = artLevel;
 	}
 }

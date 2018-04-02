@@ -4,6 +4,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.thinkgem.jeesite.common.persistence.CrudDao;
 import com.thinkgem.jeesite.common.persistence.annotation.MyBatisDao;
+import com.thinkgem.jeesite.modules.api.entity.UserVo;
 import com.thinkgem.jeesite.modules.api.entity.WxUser;
 import com.thinkgem.jeesite.modules.sys.entity.User;
 
@@ -79,4 +80,19 @@ public interface UserDao extends CrudDao<User> {
 	 * 微信小程序游客注册
 	 */
 	int registerXcx(WxUser wxUser);
+	
+	/**
+	 * 更新用户名和初始化密码
+	 */
+	int initUserLoginNameAndPassword(User user);
+	
+	/**
+	 * 初始绑定角色
+	 */
+	int initUserRole(@Param("id")String id,@Param("roleId")String roleId);
+	
+	/**
+	 * 根据ID获取用户信息及艺术信息
+	 */
+	UserVo getUserInfoAndArtLevel(@Param("id")String id);
 }

@@ -3,7 +3,7 @@
 <mapper namespace="com.thinkgem.jeesite.modules.api.dao.AppDao">
     
 	<update id="toVoidMsgCode">
-		UPDATE sys_msg_code SET status = '-1' WHERE phone = #{phone}
+		UPDATE sys_msg_code SET status = '-1' WHERE phone = #{phone} and status = '0'
 	</update>
 	
 	<insert id="insertMsgCode">
@@ -19,4 +19,5 @@
 			#{status}
 		)
 	</insert>
+	
 </mapper>

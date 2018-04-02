@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.thinkgem.jeesite.common.persistence.DataEntity;
+import com.thinkgem.jeesite.modules.api.entity.CommentVo;
 import com.thinkgem.jeesite.modules.sys.entity.User;
 
 /**
@@ -29,7 +30,22 @@ public class ArtWorks extends DataEntity<ArtWorks>{
 	private String textContent;			//文本内容
 	private int plNum;					//评论数(已通过审核的)
 	private int dzNum;					//点赞数
+	private List<CommentVo> artCommmentList;//艺术家评论
+	private List<CommentVo> commonCommmentList;//普通评论
 	
+	
+	public List<CommentVo> getArtCommmentList() {
+		return artCommmentList;
+	}
+	public void setArtCommmentList(List<CommentVo> artCommmentList) {
+		this.artCommmentList = artCommmentList;
+	}
+	public List<CommentVo> getCommonCommmentList() {
+		return commonCommmentList;
+	}
+	public void setCommonCommmentList(List<CommentVo> commonCommmentList) {
+		this.commonCommmentList = commonCommmentList;
+	}
 	public int getDzNum() {
 		return dzNum;
 	}

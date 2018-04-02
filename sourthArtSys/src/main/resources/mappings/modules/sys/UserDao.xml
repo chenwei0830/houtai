@@ -43,6 +43,7 @@
 		SELECT
 			a.id,
 			a.open_id AS "openId",
+			a.login_name AS "loginName",
 			a.del_flag  AS "delFlag"
 		FROM sys_user a
 		WHERE a.open_id = #{openId} and a.org_id = #{orgId} and a.del_flag='0'
@@ -265,4 +266,28 @@
 			#{orgId}
 		)
 	</insert>
+	<!-- 小程序提交认证申请，同时初始化用户名密码 -->
+	<update id="initUserLoginNameAndPassword">
+		update sys_user set login_name=#{loginName},password=#{password} WHERE id=#{id}
+	</update>
+	
+	<insert id="initUserRole">
+		INSERT INTO sys_user_role(user_id, role_id)VALUES(#{id},#{roleId})
+	</insert>
+	
+	<!-- 根据ID获取用户基本信息及艺术级别 -->
+	<select id="getUserInfoAndArtLevel" resultType="com.thinkgem.jeesite.modules.api.entity.UserVo">
+		SELECT
+			a.id,
+			a.nick_name AS "nickName",
+			a.photo,
+			a.art_type AS "artType",
+			a.art_level AS "artLevel"
+		FROM
+			sys_user a 
+		WHERE
+			a.id = #{id}
+	</select>
+	
+	
 </mapper>

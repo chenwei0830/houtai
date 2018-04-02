@@ -1,5 +1,6 @@
 package com.thinkgem.jeesite.modules.api.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -14,6 +15,7 @@ import com.thinkgem.jeesite.common.utils.IdcardUtils;
 import com.thinkgem.jeesite.common.utils.PhoneUtils;
 import com.thinkgem.jeesite.modules.api.dao.AppDao;
 import com.thinkgem.jeesite.modules.api.entity.ArtWorksVo;
+import com.thinkgem.jeesite.modules.api.entity.CommentVo;
 import com.thinkgem.jeesite.modules.api.entity.MineArtWorks;
 import com.thinkgem.jeesite.modules.api.entity.MineWorksAndInterest;
 import com.thinkgem.jeesite.modules.api.entity.MsgCode;
@@ -27,6 +29,7 @@ import com.thinkgem.jeesite.modules.art.entity.ArtWorksContent;
 import com.thinkgem.jeesite.modules.sys.dao.UserDao;
 import com.thinkgem.jeesite.modules.sys.entity.Org;
 import com.thinkgem.jeesite.modules.sys.entity.User;
+import com.thinkgem.jeesite.modules.sys.service.SystemService;
 
 /**
  * 接口Service
@@ -111,7 +114,15 @@ public class AppService {
 					artAuthDao.insertAuthImg(img);
 				}
 			}
-			
+			//如果初次认证，则初始化用户登录名和密码，默认两者都为用户手机号
+			if(StringUtils.isBlank(user.getLoginName())) {
+				user.setLoginName(artAuth.getPhone());
+				user.setPassword(SystemService.entryptPassword(artAuth.getPhone()));
+				userDao.initUserLoginNameAndPassword(user);
+				//先删除再初始化角色
+				userDao.deleteUserRole(user);
+				userDao.initUserRole(user.getId(), Global.USER_ROLE_ID);
+			}
 			return true;
 		}
 		
@@ -240,5 +251,53 @@ public class AppService {
 	@Transactional(readOnly = false)
 	public int insertMsgCode(MsgCode msgCode) {
 		return appDao.insertMsgCode(msgCode);
+	}
+	
+	
+	/**
+	 * 根据ID获取作品信息
+	 */
+	public ArtWorksVo geArtWorksDetailById(String id) {
+		//获取作品内容
+		ArtWorksVo artWorks = artWorksDao.geArtWorksDetailById(id);
+		//获取作者信息
+		if(artWorks!=null && artWorks.getUser()!=null && StringUtils.isNotBlank(artWorks.getUser().getId())) {
+			artWorks.setUser(userDao.getUserInfoAndArtLevel(artWorks.getUser().getId()));
+		}
+		//获取图片+视频+文字
+		List<ArtWorksContent> cList = artWorksDao.getArtWorksContentListByWorksId(id);
+		List<String> imgList = new ArrayList<String>();
+		List<String> videoList = new ArrayList<String>();
+		for(ArtWorksContent awc : cList) {
+			switch (awc.getFileType()) {
+			case "0"://图片
+				imgList.add(awc.getContent());
+				break;
+			case "1"://视频
+				videoList.add(awc.getContent());
+				break;
+			case "2"://文字
+				artWorks.setTextContent(awc.getContent());
+				break;
+			default:
+				break;
+			}
+		}
+		artWorks.setImgList(imgList);
+		artWorks.setVideoList(videoList);
+		//获取评论
+		List<CommentVo> commentList = artWorksDao.getArtWorksCommentList(id);
+		List<CommentVo> artCommmentList = new ArrayList<CommentVo>();
+		List<CommentVo> commonCommmentList = new ArrayList<CommentVo>();
+		for(CommentVo v : commentList) {
+			if(StringUtils.equals("1", v.getMsgType())) {//艺术家评论
+				artCommmentList.add(v);
+			}else {
+				commonCommmentList.add(v);
+			}
+		}
+		artWorks.setArtCommmentList(artCommmentList);
+		artWorks.setCommonCommmentList(commonCommmentList);
+		return artWorks;
 	}
 }

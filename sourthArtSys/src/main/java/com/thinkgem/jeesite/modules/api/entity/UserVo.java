@@ -6,7 +6,7 @@ package com.thinkgem.jeesite.modules.api.entity;
 public class UserVo {
 
 	private String id;
-	private String name;
+	private String nickName;
 	private String photo;
 	private String artType;
 	private String artLevel;
@@ -18,11 +18,11 @@ public class UserVo {
 	public void setId(String id) {
 		this.id = id;
 	}
-	public String getName() {
-		return name;
+	public String getNickName() {
+		return nickName;
 	}
-	public void setName(String name) {
-		this.name = name;
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
 	}
 	public String getPhoto() {
 		return photo;
