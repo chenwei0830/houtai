@@ -26,6 +26,14 @@ public class ArtWorksVo {
 	private int dzNum;					//点赞数
 	private List<CommentVo> artCommmentList;//艺术家评论
 	private List<CommentVo> commonCommmentList;//普通评论
+	private List<CommentVo> commentList;//所有评论
+	
+	public List<CommentVo> getCommentList() {
+		return commentList;
+	}
+	public void setCommentList(List<CommentVo> commentList) {
+		this.commentList = commentList;
+	}
 	public String getId() {
 		return id;
 	}

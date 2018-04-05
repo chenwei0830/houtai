@@ -21,6 +21,7 @@ import com.thinkgem.jeesite.modules.api.entity.MineWorksAndInterest;
 import com.thinkgem.jeesite.modules.api.entity.MsgCode;
 import com.thinkgem.jeesite.modules.api.entity.WxUser;
 import com.thinkgem.jeesite.modules.art.dao.ArtAuthDao;
+import com.thinkgem.jeesite.modules.art.dao.ArtWorksCommentDao;
 import com.thinkgem.jeesite.modules.art.dao.ArtWorksDao;
 import com.thinkgem.jeesite.modules.art.entity.ArtAuth;
 import com.thinkgem.jeesite.modules.art.entity.ArtAuthImg;
@@ -51,6 +52,9 @@ public class AppService {
 	
 	@Autowired
 	private AppDao appDao;
+	
+	@Autowired
+	private ArtWorksCommentDao artWorksCommentDao;
 	
 	/**
 	 * 根据艺术类别获取列表
@@ -287,17 +291,33 @@ public class AppService {
 		artWorks.setVideoList(videoList);
 		//获取评论
 		List<CommentVo> commentList = artWorksDao.getArtWorksCommentList(id);
-		List<CommentVo> artCommmentList = new ArrayList<CommentVo>();
-		List<CommentVo> commonCommmentList = new ArrayList<CommentVo>();
-		for(CommentVo v : commentList) {
-			if(StringUtils.equals("1", v.getMsgType())) {//艺术家评论
-				artCommmentList.add(v);
-			}else {
-				commonCommmentList.add(v);
-			}
-		}
-		artWorks.setArtCommmentList(artCommmentList);
-		artWorks.setCommonCommmentList(commonCommmentList);
+		artWorks.setCommentList(commentList);
+//		List<CommentVo> artCommmentList = new ArrayList<CommentVo>();
+//		List<CommentVo> commonCommmentList = new ArrayList<CommentVo>();
+//		for(CommentVo v : commentList) {
+//			if(StringUtils.equals("1", v.getMsgType())) {//艺术家评论
+//				artCommmentList.add(v);
+//			}else {
+//				commonCommmentList.add(v);
+//			}
+//		}
+//		artWorks.setArtCommmentList(artCommmentList);
+//		artWorks.setCommonCommmentList(commonCommmentList);
 		return artWorks;
+	}
+	
+	
+	/**
+	 * 保存评论
+	 */
+	@Transactional(readOnly = false)
+	public int saveComment(CommentVo commentVo) {
+		User user = userDao.getByOpenId(commentVo.getOpenId(),commentVo.getOrgId());
+		if(user!=null) {
+			commentVo.setUserId(user.getId());
+			return artWorksCommentDao.saveComment(commentVo);
+		}else {
+			return -1;
+		}
 	}
 }

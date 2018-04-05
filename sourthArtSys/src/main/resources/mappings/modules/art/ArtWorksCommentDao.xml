@@ -73,4 +73,36 @@
 			del_flag = #{DEL_FLAG_DELETE}
 		WHERE id = #{id}
 	</update>
+	
+	<insert id="saveComment">
+		INSERT INTO art_works_comment (
+			id,
+			content,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			del_flag,
+			status,
+			parent,
+			dz_num,
+			is_hot,
+			art_works_id,
+			remarks
+		)VALUES(
+			#{id},
+			#{content},
+			#{userId},
+			#{createDate},
+			#{userId},
+			#{createDate},
+			'0',
+			'0',
+			#{parent},
+			#{dzNum},
+			'0',
+			#{artWorksId},
+			''
+		)
+	</insert>
 </mapper>

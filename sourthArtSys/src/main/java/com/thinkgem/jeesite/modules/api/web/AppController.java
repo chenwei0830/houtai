@@ -27,6 +27,7 @@ import com.thinkgem.jeesite.common.utils.QiNiuUtils;
 import com.thinkgem.jeesite.common.utils.SendMsgUtils;
 import com.thinkgem.jeesite.modules.api.entity.AppJson;
 import com.thinkgem.jeesite.modules.api.entity.ArtWorksVo;
+import com.thinkgem.jeesite.modules.api.entity.CommentVo;
 import com.thinkgem.jeesite.modules.api.entity.MineArtWorks;
 import com.thinkgem.jeesite.modules.api.entity.MsgCode;
 import com.thinkgem.jeesite.modules.api.entity.WxResult;
@@ -60,7 +61,7 @@ public class AppController {
 		
 		if(wxUser!=null && StringUtils.isNotBlank(wxUser.getOpenId()) 
 				&& StringUtils.isNotBlank(wxUser.getOrgId())) {
-			//根据unionId判断是否已注册,未注册先插入数据
+			//根据openId判断是否已注册,未注册先插入数据
 			User u = appService.getUserByOpenId(wxUser.getOpenId(),wxUser.getOrgId());
 			if(u!=null) {
 				//更新昵称+头像
@@ -264,4 +265,17 @@ public class AppController {
 		return new AppJson(artWorks);
 	}
 	
+	/**
+	 * 提交评论
+	 */
+	
+	@ResponseBody
+	@RequestMapping(value = {"saveComment"},method = RequestMethod.POST)
+	public AppJson saveComment(@RequestBody CommentVo commentVo){
+		int a = appService.saveComment(commentVo);
+		if(a>0) {
+			return new AppJson();
+		}
+		return new AppJson("-1","评论失败",null);
+	}
 }

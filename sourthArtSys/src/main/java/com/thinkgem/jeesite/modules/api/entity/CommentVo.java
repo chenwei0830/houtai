@@ -2,6 +2,9 @@ package com.thinkgem.jeesite.modules.api.entity;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.thinkgem.jeesite.common.utils.StringUtils;
+
 /**
  * 评论
  */
@@ -10,7 +13,7 @@ public class CommentVo {
 	private String id;		 	//评论ID
 	private String content;		//评论内容
 	private String userId;		//评论人ID
-	private String nickName;		//评论人名称
+	private String nickName;	//评论人名称
 	private String photo;		//评论人头像
 	private String artType;		//评论人艺术类别
 	private String artLevel;	//评论人艺术级别
@@ -19,8 +22,36 @@ public class CommentVo {
 	private int dzNum;			//评论点赞数
 	private String msgType;		//评论类型 '1'-艺术家 '0'-普通
 	
+	private String openId;		
+	private String parent;		//父类评论ID
+	private String orgId;		
+	private String artWorksId;
 	
 	
+	public String getArtWorksId() {
+		return artWorksId;
+	}
+	public void setArtWorksId(String artWorksId) {
+		this.artWorksId = artWorksId;
+	}
+	public String getOrgId() {
+		return orgId;
+	}
+	public void setOrgId(String orgId) {
+		this.orgId = orgId;
+	}
+	public String getParent() {
+		return parent;
+	}
+	public void setParent(String parent) {
+		this.parent = parent;
+	}
+	public String getOpenId() {
+		return openId;
+	}
+	public void setOpenId(String openId) {
+		this.openId = openId;
+	}
 	public String getMsgType() {
 		return msgType;
 	}
@@ -33,6 +64,7 @@ public class CommentVo {
 	public void setNickName(String nickName) {
 		this.nickName = nickName;
 	}
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm")
 	public Date getCreateDate() {
 		return createDate;
 	}
@@ -64,7 +96,27 @@ public class CommentVo {
 		this.photo = photo;
 	}
 	public String getArtType() {
-		return artType;
+		String type = "";
+		if(StringUtils.isNotBlank(artType)) {
+			switch (artType) {
+			case "0":
+				type = "摄影";
+				break;
+			case "1":
+				type = "美术";
+				break;
+			case "2":
+				type = "书法";
+				break;
+			case "3":
+				type = "文学";
+				break;
+			default:
+				type = "未知";
+				break;
+			}
+		}
+		return type;
 	}
 	public void setArtType(String artType) {
 		this.artType = artType;
