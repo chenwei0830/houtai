@@ -22,11 +22,13 @@ import com.thinkgem.jeesite.modules.api.entity.MsgCode;
 import com.thinkgem.jeesite.modules.api.entity.WxUser;
 import com.thinkgem.jeesite.modules.art.dao.ArtAuthDao;
 import com.thinkgem.jeesite.modules.art.dao.ArtWorksCommentDao;
+import com.thinkgem.jeesite.modules.art.dao.ArtWorksCollectDao;
 import com.thinkgem.jeesite.modules.art.dao.ArtWorksDao;
 import com.thinkgem.jeesite.modules.art.entity.ArtAuth;
 import com.thinkgem.jeesite.modules.art.entity.ArtAuthImg;
 import com.thinkgem.jeesite.modules.art.entity.ArtWorks;
 import com.thinkgem.jeesite.modules.art.entity.ArtWorksContent;
+import com.thinkgem.jeesite.modules.art.entity.ArtWorksCollect;
 import com.thinkgem.jeesite.modules.sys.dao.UserDao;
 import com.thinkgem.jeesite.modules.sys.entity.Org;
 import com.thinkgem.jeesite.modules.sys.entity.User;
@@ -55,6 +57,9 @@ public class AppService {
 	
 	@Autowired
 	private ArtWorksCommentDao artWorksCommentDao;
+	
+	@Autowired
+	private ArtWorksCollectDao collectDao;
 	
 	/**
 	 * 根据艺术类别获取列表
@@ -319,5 +324,24 @@ public class AppService {
 		}else {
 			return -1;
 		}
+	}
+
+	@Transactional(readOnly = false)
+	public boolean addCollectArtWorks(ArtWorksCollect artWorksCollect) {
+		if(StringUtils.isNotBlank(artWorksCollect.getOpenId()) && StringUtils.isNotBlank(artWorksCollect.getOrgId())
+				&& StringUtils.isNotBlank(artWorksCollect.getArtWorksId())) {
+			
+			User user = userDao.getByOpenId(artWorksCollect.getOpenId(),artWorksCollect.getOrgId());
+			artWorksCollect.setUserId(user.getId());
+		
+			if (artWorksCollect.getType() == 0) {
+				collectDao.deleteCollection(artWorksCollect);
+			} else {
+				artWorksCollect.preInsert();
+				collectDao.insertCollection(artWorksCollect);
+			}
+			return true;
+		}
+		return false;
 	}
 }
