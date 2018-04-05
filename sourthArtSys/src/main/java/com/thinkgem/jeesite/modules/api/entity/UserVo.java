@@ -1,5 +1,7 @@
 package com.thinkgem.jeesite.modules.api.entity;
 
+import com.thinkgem.jeesite.common.utils.StringUtils;
+
 /**
  * 用户
  */
@@ -31,7 +33,28 @@ public class UserVo {
 		this.photo = photo;
 	}
 	public String getArtType() {
-		return artType;
+		
+		String type = "";
+		if(StringUtils.isNotBlank(artType)) {
+			switch (artType) {
+			case "0":
+				type = "摄影";
+				break;
+			case "1":
+				type = "美术";
+				break;
+			case "2":
+				type = "书法";
+				break;
+			case "3":
+				type = "文学";
+				break;
+			default:
+				type = "未知";
+				break;
+			}
+		}
+		return type;
 	}
 	public void setArtType(String artType) {
 		this.artType = artType;
