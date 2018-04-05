@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fasterxml.jackson.annotation.ObjectIdGenerators.UUIDGenerator;
 import com.thinkgem.jeesite.common.config.Global;
 import com.thinkgem.jeesite.common.utils.IdGen;
 import com.thinkgem.jeesite.common.utils.IdcardUtils;
@@ -320,6 +321,8 @@ public class AppService {
 		User user = userDao.getByOpenId(commentVo.getOpenId(),commentVo.getOrgId());
 		if(user!=null) {
 			commentVo.setUserId(user.getId());
+			commentVo.setId(IdGen.uuid());
+			commentVo.setCreateDate(new Date());
 			return artWorksCommentDao.saveComment(commentVo);
 		}else {
 			return -1;

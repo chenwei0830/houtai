@@ -234,13 +234,12 @@
 			a.create_date AS "createDate",
 			a.content,
 			a.dz_num AS "dzNum",
-			(SELECT count(*) FROM art_works_comment c where c.art_works_id=#{artWorksId} and c.status='1' and c.del_flag='0') AS "msgNum"
-			<!-- CASE WHEN b.user_type is not null and b.art_level is not null then '1' else '0' end as "msgType" -->
+			(SELECT count(*) FROM art_works_comment c where c.parent=a.id and c.status='1' and c.del_flag='0') AS "msgNum"
 		FROM
 			art_works_comment a,
 			sys_user b
 		WHERE
-			a.art_works_id = #{artWorksId}
+			a.art_works_id = #{artWorksId} and a.parent IS NULL
 		AND a.create_by = b.id
 	</select>
 	
