@@ -6,19 +6,59 @@
 		INSERT INTO user_artworks_collect(
 			id,
 			user_id,
-			art_works_id
+			art_works_id,
+			create_date,
+			create_by
 		) VALUES (
 			#{id},
-			#{userId},
-			#{artWorksId}
+			#{user.id},
+			#{artWorksId},
+			#{createDate},
+			#{createBy.id}
 		)
 	</insert>
 	
 
 	<update id="deleteCollection">
 		DELETE from user_artworks_collect
-		WHERE user_id = #{userId}
+		WHERE user_id = #{user.id}
 		AND art_works_id = #{artWorksId}
 	</update>
+	
+	<select id="findByUserIdAndArtId" resultType="com.thinkgem.jeesite.modules.art.entity.ArtWorksCollect">
+		SELECT
+			*
+		FROM
+			user_artworks_collect
+		WHERE
+			user_id = #{user.id}
+		AND art_works_id = #{artWorksId}
+	</select>
+	
+	<!-- 获取我的收藏 -->
+	<select id="getCollectListByUserId" resultType="com.thinkgem.jeesite.modules.api.entity.MineArtWorks">
+		SELECT
+			a.id,
+			a.title,
+			a.location,
+			a.model_type AS "modelType",
+			a.status,
+			CASE WHEN a.model_type='0' THEN (SELECT b.content FROM art_works_content b where b.art_works_id=a.id and b.file_type='0' LIMIT 0,1)
+				WHEN a.model_type='1' THEN (SELECT b.content FROM art_works_content b where b.art_works_id=a.id and b.file_type='1' LIMIT 0,1)
+			else '' END AS "mediaUrl",
+			(SELECT t.content FROM art_works_content t where t.art_works_id=a.id and t.file_type='2' LIMIT 0,1) AS "content",
+			a.dz_num AS "dzNum",
+			CASE WHEN a.status='1' THEN (SELECT count(*) FROM art_works_comment v WHERE v.art_works_id=a.id)
+			ELSE 0 END AS "plNum",
+			a.create_date AS "createDate"
+		FROM
+			art_works a,
+			user_artworks_collect u
+		WHERE
+		a.id = u.art_works_id
+		AND u.user_id = #{user.id}
+		AND a.del_flag = '0'
+		ORDER BY a.create_date DESC
+	</select>
 	
 </mapper>

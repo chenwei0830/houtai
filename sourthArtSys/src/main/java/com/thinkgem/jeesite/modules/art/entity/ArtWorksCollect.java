@@ -1,6 +1,7 @@
 package com.thinkgem.jeesite.modules.art.entity;
 
 import com.thinkgem.jeesite.common.persistence.DataEntity;
+import com.thinkgem.jeesite.modules.sys.entity.User;
 
 /**
  * 收藏艺术作品Entity
@@ -10,7 +11,7 @@ public class ArtWorksCollect extends DataEntity<ArtWorksCollect>{
 	private static final long serialVersionUID = 1L;
 
 	private String openId;
-	private String userId;
+	private User user;
 	private String artWorksId; 
 	private int type; 			// 0表示取消收藏，1表示收藏
 	private String orgId;		//机构ID
@@ -40,10 +41,10 @@ public class ArtWorksCollect extends DataEntity<ArtWorksCollect>{
 	public void setOrgId(String orgId) {
 		this.orgId = orgId;
 	}
-	public String getUserId() {
-		return userId;
+	public User getUser() {
+		return user;
 	}
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public void setUser(User user) {
+		this.user = user;
 	}
 }

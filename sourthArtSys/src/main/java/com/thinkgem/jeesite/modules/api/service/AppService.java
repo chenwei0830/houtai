@@ -344,19 +344,34 @@ public class AppService {
 				&& StringUtils.isNotBlank(artWorksCollect.getArtWorksId())) {
 			
 			User user = userDao.getByOpenId(artWorksCollect.getOpenId(),artWorksCollect.getOrgId());
-			artWorksCollect.setUserId(user.getId());
+			artWorksCollect.setUser(user);
 		
 			if (artWorksCollect.getType() == 0) {
 				collectDao.deleteCollection(artWorksCollect);
 			} else {
 				artWorksCollect.preInsert();
-				collectDao.insertCollection(artWorksCollect);
+				ArtWorksCollect collect = collectDao.findByUserIdAndArtId(artWorksCollect);
+				if (collect == null) {
+					collectDao.insertCollection(artWorksCollect);
+				}
 			}
 			return true;
 		}
 		return false;
 	}
 	
+	
+	/**
+	 * 获取我的收藏列表
+	 */
+	public List<MineArtWorks> getMyCollectList(String openId, String orgId){
+		ArtWorksCollect artWorksCollect = new ArtWorksCollect();
+		artWorksCollect.setOpenId(openId);
+		artWorksCollect.setOrgId(orgId);
+		User user = userDao.getByOpenId(artWorksCollect.getOpenId(),artWorksCollect.getOrgId());
+		artWorksCollect.setUser(user);
+		return collectDao.getCollectListByUserId(artWorksCollect);
+	}
 	
 	/**
 	 * 保存或取消评论

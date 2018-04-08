@@ -298,6 +298,18 @@ public class AppController {
 		}
 	}
 	
+	
+	/**
+	 * 获取我的收藏列表
+	 */
+	@ResponseBody
+	@RequestMapping(value = {"collectArtworks/list"},method = RequestMethod.GET)
+	public AppJson myCollectList(String openId, String orgId) {
+		
+		return new AppJson(appService.getMyCollectList(openId, orgId));
+	}
+	
+	
 	/**
 	 * 保存或取消点赞
 	 */
@@ -311,4 +323,5 @@ public class AppController {
 			return new AppJson("保存作品失败");
 		}
 	}
+	
 }
