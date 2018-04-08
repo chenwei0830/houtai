@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fasterxml.jackson.annotation.ObjectIdGenerators.UUIDGenerator;
 import com.thinkgem.jeesite.common.config.Global;
 import com.thinkgem.jeesite.common.utils.IdGen;
 import com.thinkgem.jeesite.common.utils.IdcardUtils;
@@ -20,16 +19,17 @@ import com.thinkgem.jeesite.modules.api.entity.CommentVo;
 import com.thinkgem.jeesite.modules.api.entity.MineArtWorks;
 import com.thinkgem.jeesite.modules.api.entity.MineWorksAndInterest;
 import com.thinkgem.jeesite.modules.api.entity.MsgCode;
+import com.thinkgem.jeesite.modules.api.entity.UserDzVo;
 import com.thinkgem.jeesite.modules.api.entity.WxUser;
 import com.thinkgem.jeesite.modules.art.dao.ArtAuthDao;
-import com.thinkgem.jeesite.modules.art.dao.ArtWorksCommentDao;
 import com.thinkgem.jeesite.modules.art.dao.ArtWorksCollectDao;
+import com.thinkgem.jeesite.modules.art.dao.ArtWorksCommentDao;
 import com.thinkgem.jeesite.modules.art.dao.ArtWorksDao;
 import com.thinkgem.jeesite.modules.art.entity.ArtAuth;
 import com.thinkgem.jeesite.modules.art.entity.ArtAuthImg;
 import com.thinkgem.jeesite.modules.art.entity.ArtWorks;
-import com.thinkgem.jeesite.modules.art.entity.ArtWorksContent;
 import com.thinkgem.jeesite.modules.art.entity.ArtWorksCollect;
+import com.thinkgem.jeesite.modules.art.entity.ArtWorksContent;
 import com.thinkgem.jeesite.modules.sys.dao.UserDao;
 import com.thinkgem.jeesite.modules.sys.entity.Org;
 import com.thinkgem.jeesite.modules.sys.entity.User;
@@ -111,7 +111,7 @@ public class AppService {
 			artAuth.setUpdateBy(user);
 			artAuth.setCreateBy(user);
 			artAuth.setUser(user);
-			artAuth.setStatus("0");//强制设置为'0'-待审核状态
+			artAuth.setStatus("1");//强制设置为'0'-待审核状态 测试阶段 设置为'1'-已审核
 			artAuth.setOrg(new Org(artAuth.getOrgId()));
 			int a = artAuthDao.insert(artAuth);
 			if(a>0) {
@@ -133,6 +133,12 @@ public class AppService {
 				userDao.deleteUserRole(user);
 				userDao.initUserRole(user.getId(), Global.USER_ROLE_ID);
 			}
+			
+			//测试阶段默认认证通过，同步用户表中artLevel和artType
+			user.setArtLevel(artAuth.getArtLevel());
+			user.setArtType(artAuth.getArtType());
+			userDao.updateUserArtLevelAndType(user);
+			
 			return true;
 		}
 		
@@ -158,7 +164,7 @@ public class AppService {
 				artWorks.setUpdateDate(new Date());
 				artWorks.setCreateDate(artWorks.getUpdateDate());
 				artWorks.setUser(user);
-				artWorks.setStatus("0");//强制设置为'0'-待审核状态
+				artWorks.setStatus("1");//强制设置为'0'-待审核状态 测试阶段默认不需要审核
 				artWorks.setOrg(new Org(artWorks.getOrgId()));
 				artWorks.setDzNum(0);//默认点赞数为0
 				int a = artWorksDao.insert(artWorks);
@@ -267,9 +273,9 @@ public class AppService {
 	/**
 	 * 根据ID获取作品信息
 	 */
-	public ArtWorksVo geArtWorksDetailById(String id) {
+	public ArtWorksVo geArtWorksDetailById(String id,String openId) {
 		//获取作品内容
-		ArtWorksVo artWorks = artWorksDao.geArtWorksDetailById(id);
+		ArtWorksVo artWorks = artWorksDao.geArtWorksDetailById(id,openId);
 		//获取作者信息
 		if(artWorks!=null && artWorks.getUser()!=null && StringUtils.isNotBlank(artWorks.getUser().getId())) {
 			artWorks.setUser(userDao.getUserInfoAndArtLevel(artWorks.getUser().getId()));
@@ -329,6 +335,9 @@ public class AppService {
 		}
 	}
 
+	/**
+	 * 保存或取消收藏
+	 */
 	@Transactional(readOnly = false)
 	public boolean addCollectArtWorks(ArtWorksCollect artWorksCollect) {
 		if(StringUtils.isNotBlank(artWorksCollect.getOpenId()) && StringUtils.isNotBlank(artWorksCollect.getOrgId())
@@ -342,6 +351,43 @@ public class AppService {
 			} else {
 				artWorksCollect.preInsert();
 				collectDao.insertCollection(artWorksCollect);
+			}
+			return true;
+		}
+		return false;
+	}
+	
+	
+	/**
+	 * 保存或取消评论
+	 */
+	@Transactional(readOnly = false)
+	public boolean targetDz(UserDzVo userDzVo) {
+		if(StringUtils.isNotBlank(userDzVo.getOpenId()) && StringUtils.isNotBlank(userDzVo.getOrgId())
+				&& StringUtils.isNotBlank(userDzVo.getTargetId())) {
+			
+			User user = userDao.getByOpenId(userDzVo.getOpenId(),userDzVo.getOrgId());
+			userDzVo.setUserId(user.getId());
+			if (StringUtils.equals("1", userDzVo.getDelFlag())) {//取消点赞
+				if(StringUtils.equals("0", userDzVo.getType())) {//0-作品 1-评论
+					appDao.deleteArtWorksDZ(userDzVo);
+				}else {
+					appDao.deleteCommentDZ(userDzVo);
+				}
+			} else {
+				userDzVo.setId(IdGen.uuid());
+				userDzVo.setCreateDate(new Date());
+				if(StringUtils.equals("0", userDzVo.getType())) {//0-作品 1-评论
+					appDao.insertArtWorksDZ(userDzVo);
+				}else {
+					appDao.insertCommentDZ(userDzVo);
+				}
+			}
+			//修改作品或评论的点赞总数
+			if(StringUtils.equals("0", userDzVo.getType())) {//0-作品 1-评论
+				appDao.updateArtWorksDZ(userDzVo);
+			}else {
+				appDao.updateCommentDZ(userDzVo);
 			}
 			return true;
 		}

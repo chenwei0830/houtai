@@ -20,4 +20,69 @@
 		)
 	</insert>
 	
+	<insert id="insertArtWorksDZ">
+		INSERT INTO user_dz_artworks(
+			id,
+			user_id,
+			art_works_id,
+			create_date,
+			del_flag
+		)VALUES(
+			#{id},
+			#{userId},
+			#{targetId},
+			#{createDate},
+			'0'
+		)
+	</insert>
+	
+	<insert id="insertCommentDZ">
+		INSERT INTO user_dz_comment(
+			id,
+			user_id,
+			comment_id,
+			create_date,
+			del_flag
+		)VALUES(
+			#{id},
+			#{userId},
+			#{targetId},
+			#{createDate},
+			'0'
+		)
+	</insert>
+	
+	<update id="deleteArtWorksDZ">
+		UPDATE user_dz_artworks SET del_flag = '1' WHERE user_id = #{userId} AND art_works_id = #{targetId}
+	</update>
+	
+	<update id="deleteCommentDZ">
+		UPDATE user_dz_comment SET del_flag = '1' WHERE user_id = #{userId} AND comment_id = #{targetId}
+	</update>
+	
+	<update id="updateArtWorksDZ">
+		UPDATE art_works SET 
+		<choose>
+			<when test='delFlag!=null and delFlag=="0"'>
+				dz_num = dz_num + 1
+			</when>
+			<otherwise>
+				dz_num = dz_num - 1
+			</otherwise>
+		</choose>
+		WHERE id = #{targetId}
+	</update>
+	
+	<update id="updateCommentDZ">
+		UPDATE art_works_comment SET 
+		<choose>
+			<when test='delFlag!=null and delFlag=="0"'>
+				dz_num = dz_num + 1
+			</when>
+			<otherwise>
+				dz_num = dz_num - 1
+			</otherwise>
+		</choose>
+		WHERE id = #{targetId}
+	</update>
 </mapper>

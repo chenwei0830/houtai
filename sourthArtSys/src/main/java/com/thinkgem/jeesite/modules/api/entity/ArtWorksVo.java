@@ -28,6 +28,10 @@ public class ArtWorksVo {
 	private List<CommentVo> commonCommmentList;//普通评论
 	private List<CommentVo> commentList;//所有评论
 	
+	private int hasCollected;			//是否已收藏 0-否 1-是
+	private int hasDz;					//是否已点赞
+	
+	
 	public List<CommentVo> getCommentList() {
 		return commentList;
 	}
@@ -124,5 +128,17 @@ public class ArtWorksVo {
 	}
 	public void setCommonCommmentList(List<CommentVo> commonCommmentList) {
 		this.commonCommmentList = commonCommmentList;
+	}
+	public int getHasCollected() {
+		return hasCollected;
+	}
+	public void setHasCollected(int hasCollected) {
+		this.hasCollected = hasCollected;
+	}
+	public int getHasDz() {
+		return hasDz;
+	}
+	public void setHasDz(int hasDz) {
+		this.hasDz = hasDz;
 	}
 }

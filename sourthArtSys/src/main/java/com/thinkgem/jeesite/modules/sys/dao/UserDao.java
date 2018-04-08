@@ -95,4 +95,9 @@ public interface UserDao extends CrudDao<User> {
 	 * 根据ID获取用户信息及艺术信息
 	 */
 	UserVo getUserInfoAndArtLevel(@Param("id")String id);
+	
+	/**
+	 * 更新用户艺术级别和分类
+	 */
+	int updateUserArtLevelAndType(User user);
 }

@@ -103,7 +103,7 @@
 			#{phone},
 			#{artType},
 			#{artLevel},
-			'0',
+			#{status},
 			#{org.id},
 			#{feePayStatus},
 			#{feePayNo},

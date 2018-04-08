@@ -26,8 +26,14 @@ public class CommentVo {
 	private String parent;		//父类评论ID
 	private String orgId;		
 	private String artWorksId;
+	private int hasDz;					//是否已点赞
 	
-	
+	public int getHasDz() {
+		return hasDz;
+	}
+	public void setHasDz(int hasDz) {
+		this.hasDz = hasDz;
+	}
 	public String getArtWorksId() {
 		return artWorksId;
 	}

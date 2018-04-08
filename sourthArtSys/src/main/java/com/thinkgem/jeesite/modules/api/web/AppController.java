@@ -30,6 +30,7 @@ import com.thinkgem.jeesite.modules.api.entity.ArtWorksVo;
 import com.thinkgem.jeesite.modules.api.entity.CommentVo;
 import com.thinkgem.jeesite.modules.api.entity.MineArtWorks;
 import com.thinkgem.jeesite.modules.api.entity.MsgCode;
+import com.thinkgem.jeesite.modules.api.entity.UserDzVo;
 import com.thinkgem.jeesite.modules.api.entity.WxResult;
 import com.thinkgem.jeesite.modules.api.entity.WxUser;
 import com.thinkgem.jeesite.modules.api.service.AppService;
@@ -68,7 +69,10 @@ public class AppController {
 				//更新昵称+头像
 				wxUser.setUpdateDate(new Date());
 				appService.updateUserByOpenId(wxUser);
-				return new AppJson("0","登录成功",null);
+				//返回用户信息
+				wxUser.setArtLevel(u.getArtLevel());
+				wxUser.setArtType(u.getArtType());
+				return new AppJson("0","登录成功",wxUser);
 			}else {
 				int a = appService.registerXcx(wxUser);
 				if(a>0) {
@@ -261,8 +265,8 @@ public class AppController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = {"getArtWorksDetail"},method = RequestMethod.GET)
-	public AppJson getArtWorksDetail(@RequestParam String id){
-		ArtWorksVo artWorks = appService.geArtWorksDetailById(id);
+	public AppJson getArtWorksDetail(@RequestParam("id") String id,@RequestParam("openId") String openId){
+		ArtWorksVo artWorks = appService.geArtWorksDetailById(id,openId);
 		return new AppJson(artWorks);
 	}
 	
@@ -287,6 +291,20 @@ public class AppController {
 	@RequestMapping(value = {"collectArtworks"},method = RequestMethod.POST)
 	public AppJson collectArtworks(@RequestBody ArtWorksCollect artWorksCollect) {
 		boolean flag = appService.addCollectArtWorks(artWorksCollect);
+		if(flag) {
+			return new AppJson();
+		}else {
+			return new AppJson("保存作品失败");
+		}
+	}
+	
+	/**
+	 * 保存或取消点赞
+	 */
+	@ResponseBody
+	@RequestMapping(value = {"targetDz"},method = RequestMethod.POST)
+	public AppJson targetDz(@RequestBody UserDzVo userDzVo) {
+		boolean flag = appService.targetDz(userDzVo);
 		if(flag) {
 			return new AppJson();
 		}else {

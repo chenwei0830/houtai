@@ -2,6 +2,8 @@ package com.thinkgem.jeesite.modules.api.entity;
 
 import java.util.Date;
 
+import com.thinkgem.jeesite.common.utils.StringUtils;
+
 /**
  * 小程序用户信息类
  */
@@ -19,7 +21,8 @@ public class WxUser {
 	private String orgId;			//机构ID
 	private Date createDate;		// 创建日期
 	private Date updateDate;		// 更新日期
-	
+	private String artLevel;
+	private String artType;
 	
 	
 	public String getId() {
@@ -93,5 +96,37 @@ public class WxUser {
 	}
 	public void setOpenId(String openId) {
 		this.openId = openId;
+	}
+	public String getArtLevel() {
+		return artLevel;
+	}
+	public void setArtLevel(String artLevel) {
+		this.artLevel = artLevel;
+	}
+	public String getArtType() {
+		String type = "";
+		if(StringUtils.isNotBlank(artType)) {
+			switch (artType) {
+			case "0":
+				type = "摄影";
+				break;
+			case "1":
+				type = "美术";
+				break;
+			case "2":
+				type = "书法";
+				break;
+			case "3":
+				type = "文学";
+				break;
+			default:
+				type = "未知";
+				break;
+			}
+		}
+		return type;
+	}
+	public void setArtType(String artType) {
+		this.artType = artType;
 	}
 }

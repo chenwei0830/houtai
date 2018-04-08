@@ -25,7 +25,7 @@ public interface ArtWorksDao extends CrudDao<ArtWorks>{
 	
 	List<MineArtWorks> getMineArtWorksList(MineArtWorks mineArtWorks);
 	
-	ArtWorksVo geArtWorksDetailById(@Param("id")String id);
+	ArtWorksVo geArtWorksDetailById(@Param("id")String id,@Param("openId")String openId);
 	
 	List<ArtWorksContent> getArtWorksContentListByWorksId(@Param("artWorksId")String artWorksId);
 	

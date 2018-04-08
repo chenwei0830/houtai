@@ -97,7 +97,7 @@
 			#{userId},
 			#{createDate},
 			'0',
-			'0',
+			'1',
 			#{parent},
 			#{dzNum},
 			'0',
