@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.thinkgem.jeesite.common.persistence.CrudDao;
 import com.thinkgem.jeesite.common.persistence.annotation.MyBatisDao;
+import com.thinkgem.jeesite.modules.api.entity.ArtWorksIndexPage;
 import com.thinkgem.jeesite.modules.api.entity.ArtWorksVo;
 import com.thinkgem.jeesite.modules.api.entity.CommentVo;
 import com.thinkgem.jeesite.modules.api.entity.MineArtWorks;
@@ -30,4 +31,10 @@ public interface ArtWorksDao extends CrudDao<ArtWorks>{
 	List<ArtWorksContent> getArtWorksContentListByWorksId(@Param("artWorksId")String artWorksId);
 	
 	List<CommentVo> getArtWorksCommentList(@Param("artWorksId")String artWorksId);
+	
+	List<ArtWorksIndexPage> getIndexPage(ArtWorksIndexPage artWorksIndexPage);
+	
+	List<ArtWorksContent> getArtWorksContentListToGif();
+	
+	void updateArtWorksContentGifUrl(ArtWorksContent artWorksContent);
 }

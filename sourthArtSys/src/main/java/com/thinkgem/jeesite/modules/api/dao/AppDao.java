@@ -1,9 +1,14 @@
 package com.thinkgem.jeesite.modules.api.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 
 import com.thinkgem.jeesite.common.persistence.annotation.MyBatisDao;
+import com.thinkgem.jeesite.modules.api.entity.ArtVo;
 import com.thinkgem.jeesite.modules.api.entity.MsgCode;
+import com.thinkgem.jeesite.modules.api.entity.NewsInfoVo;
+import com.thinkgem.jeesite.modules.api.entity.NewsVo;
 import com.thinkgem.jeesite.modules.api.entity.UserDzVo;
 
 /**
@@ -29,4 +34,13 @@ public interface AppDao {
 	
 	int updateCommentDZ(UserDzVo userDzVo);
 	
+	List<ArtVo> getArtList(@Param("searchParam")String searchParam);
+	
+	ArtVo getArtInfo(@Param("id")String id);
+	
+	List<NewsVo> getNewsList();
+	
+	NewsVo getNewsById(@Param("id")String id);
+	
+	List<NewsInfoVo> getNewsInfo(@Param("newsId")String newsId);
 }

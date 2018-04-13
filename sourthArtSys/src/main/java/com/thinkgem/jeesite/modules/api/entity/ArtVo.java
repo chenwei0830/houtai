@@ -3,15 +3,17 @@ package com.thinkgem.jeesite.modules.api.entity;
 import com.thinkgem.jeesite.common.utils.StringUtils;
 
 /**
- * 用户
+ * 艺术家
  */
-public class UserVo {
-
+public class ArtVo {
+	
 	private String id;
 	private String nickName;
 	private String photo;
-	private String artType;
+	private String remarks;
 	private String artLevel;
+	private String artType;
+	private int artWorksNum = 60;		//作品数
 	
 	
 	public String getId() {
@@ -32,8 +34,19 @@ public class UserVo {
 	public void setPhoto(String photo) {
 		this.photo = photo;
 	}
+	public String getRemarks() {
+		return remarks;
+	}
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
+	public String getArtLevel() {
+		return artLevel;
+	}
+	public void setArtLevel(String artLevel) {
+		this.artLevel = artLevel;
+	}
 	public String getArtType() {
-		
 		String type = "";
 		if(StringUtils.isNotBlank(artType)) {
 			switch (artType) {
@@ -68,10 +81,10 @@ public class UserVo {
 	public void setArtType(String artType) {
 		this.artType = artType;
 	}
-	public String getArtLevel() {
-		return artLevel;
+	public int getArtWorksNum() {
+		return artWorksNum;
 	}
-	public void setArtLevel(String artLevel) {
-		this.artLevel = artLevel;
+	public void setArtWorksNum(int artWorksNum) {
+		this.artWorksNum = artWorksNum;
 	}
 }

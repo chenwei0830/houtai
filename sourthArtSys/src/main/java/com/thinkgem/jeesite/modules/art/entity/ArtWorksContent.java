@@ -13,6 +13,14 @@ public class ArtWorksContent extends DataEntity<ArtWorksContent>{
 	private String fileType;			//内容类型  0-图片 1-视频 2-文本
 	private String content;				//具体内容
 	private int sort;					//排序
+	private String gifUrl;				//视频对应的gifUrl
+	
+	public String getGifUrl() {
+		return gifUrl;
+	}
+	public void setGifUrl(String gifUrl) {
+		this.gifUrl = gifUrl;
+	}
 	public int getSort() {
 		return sort;
 	}

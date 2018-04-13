@@ -85,4 +85,73 @@
 		</choose>
 		WHERE id = #{targetId}
 	</update>
+	
+	<select id="getArtList" resultType="com.thinkgem.jeesite.modules.api.entity.ArtVo">
+		SELECT
+			a.id,
+			a.nick_name AS "nickName",
+			a.photo,
+			a.remarks,
+			a.art_level AS "artLevel",
+			a.art_type AS "artType"
+		FROM
+			sys_user a
+		WHERE
+			a.art_type IS NOT NULL
+		AND a.art_level IS NOT NULL
+		AND a.user_type = '3'
+		<if test='searchParam!=null and searchParam!=""'>
+			AND INSTR(a.nick_name,#{searchParam})>0
+		</if>
+		ORDER BY art_type
+	</select>
+	
+	<select id="getArtInfo" resultType="com.thinkgem.jeesite.modules.api.entity.ArtVo">
+		SELECT
+			a.id,
+			a.nick_name AS "nickName",
+			a.photo,
+			a.remarks,
+			a.art_level AS "artLevel",
+			a.art_type AS "artType"
+		FROM
+			sys_user a
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="getNewsList" resultType="com.thinkgem.jeesite.modules.api.entity.NewsVo">
+		SELECT
+			a.id,
+			a.title,
+			a.intro,
+			a.create_date AS "createDate",
+			a.author,
+			a.back_img AS "backImg"
+		FROM org_news a
+	</select>
+	
+	<select id="getNewsById" resultType="com.thinkgem.jeesite.modules.api.entity.NewsVo">
+		SELECT
+			a.id,
+			a.title,
+			a.intro,
+			a.create_date AS "createDate",
+			a.author,
+			a.back_img AS "backImg"
+		FROM org_news a where a.id = #{id}
+	</select>
+	
+	<select id="getNewsInfo" resultType="com.thinkgem.jeesite.modules.api.entity.NewsInfoVo">
+		SELECT
+			a.id,
+			a.content,
+			a.file_type AS "fileType",
+			a.model_type AS "modelType"
+		FROM
+			org_news_content a
+		WHERE
+			a.news_id = #{newsId}
+		ORDER BY
+			a.sort
+	</select>
 </mapper>

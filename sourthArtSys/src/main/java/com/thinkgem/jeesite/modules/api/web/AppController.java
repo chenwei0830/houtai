@@ -26,10 +26,13 @@ import com.thinkgem.jeesite.common.utils.IdGen;
 import com.thinkgem.jeesite.common.utils.QiNiuUtils;
 import com.thinkgem.jeesite.common.utils.SendMsgUtils;
 import com.thinkgem.jeesite.modules.api.entity.AppJson;
+import com.thinkgem.jeesite.modules.api.entity.ArtWorksIndexPage;
 import com.thinkgem.jeesite.modules.api.entity.ArtWorksVo;
 import com.thinkgem.jeesite.modules.api.entity.CommentVo;
 import com.thinkgem.jeesite.modules.api.entity.MineArtWorks;
 import com.thinkgem.jeesite.modules.api.entity.MsgCode;
+import com.thinkgem.jeesite.modules.api.entity.NewsInfoVo;
+import com.thinkgem.jeesite.modules.api.entity.NewsVo;
 import com.thinkgem.jeesite.modules.api.entity.UserDzVo;
 import com.thinkgem.jeesite.modules.api.entity.WxResult;
 import com.thinkgem.jeesite.modules.api.entity.WxUser;
@@ -115,19 +118,55 @@ public class AppController {
 	
 	/**
 	 * 1.1首页-推荐
-	 * type '1'-推荐 '2'-关注 '3'-摄影 '4'-美术 '5'-书法 '6'-文学
+	 * type '99'-推荐  '88'-关注 '0'-摄影 '1'-美术 '2'-书法 '3'-文学
 	 * @param orgId 组织机构ID
 	 */
 	@ResponseBody
-	@RequestMapping(value = {"v1/listHome/{artType}"},method = RequestMethod.GET)
-	public AppJson listHome(@PathVariable("artType") String artType) {
-		AppJson jon = null;
+	@RequestMapping(value = {"v1/listHome/{artTypeParam}"},method = RequestMethod.GET)
+	public AppJson listHome(@PathVariable("artTypeParam") String artTypeParam) {
+		List<ArtWorksIndexPage> list = new ArrayList<ArtWorksIndexPage>();
 		//获取作品
+		if(StringUtils.isNoneBlank(artTypeParam)) {
+//			switch (artTypeParam) {
+//			case "99"://推荐
+//				break;
+//			case "88"://关注
+//				break;
+//			default://默认分类
+//				break;
+//			}
+			
+			list = appService.getIndexPage(new ArtWorksIndexPage(null,artTypeParam));
+		}
 		
-		
-		
-		return jon;
+		return new AppJson(list);
 	}
+	
+	/**
+	 * 获取艺术分类
+	 */
+	@ResponseBody
+	@RequestMapping(value = {"getCategoryList"},method = RequestMethod.GET)
+	public AppJson getCategoryList() {
+		List<Map<String,String>> categoryList = new ArrayList<Map<String,String>>();
+		Map<String,String> map_1 = new HashMap<String,String>();
+		map_1.put("id", "99");
+		map_1.put("name", "推荐");
+		categoryList.add(map_1);
+		Map<String,String> map_2 = new HashMap<String,String>();
+		map_2.put("id", "88");
+		map_2.put("name", "关注");
+		categoryList.add(map_2);
+		List<Dict> typeList = DictUtils.getDictList("art_type");
+		for(Dict d : typeList) {
+			Map<String,String> m = new HashMap<String,String>();
+			m.put("id", d.getValue());
+			m.put("name", d.getLabel());
+			categoryList.add(m);
+		}
+		return new AppJson(categoryList);
+	}
+	
 	
 	
 	/**
@@ -324,4 +363,48 @@ public class AppController {
 		}
 	}
 	
+	
+	/**
+	 * 艺术家名片
+	 */
+	@ResponseBody
+	@RequestMapping(value = {"getArtList"},method = RequestMethod.GET)
+	public AppJson getArtList(String searchParam) {
+		return new AppJson(appService.getArtList(searchParam));
+	}
+	
+	
+	/**
+	 * 艺术家简介
+	 */
+	@ResponseBody
+	@RequestMapping(value = {"getArtInfo"},method = RequestMethod.GET)
+	public AppJson getArtInfo(@RequestParam("id")String id) {
+		return new AppJson(appService.getArtInfo(id));
+	}
+	
+	/**
+	 * 本馆资讯
+	 */
+	@ResponseBody
+	@RequestMapping(value = {"getNewsList"},method = RequestMethod.GET)
+	public AppJson getNewsList() {
+		return new AppJson(appService.getNewsList());
+	}
+	
+	/**
+	 * 本馆资讯详情
+	 */
+	@ResponseBody
+	@RequestMapping(value = {"getNewsInfo"},method = RequestMethod.GET)
+	public AppJson getNewsInfo(@RequestParam("newsId")String newsId) {
+		NewsVo ne = appService.getNewsById(newsId);
+		List<NewsInfoVo> list = appService.getNewsInfo(newsId);
+		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("title", ne.getTitle());
+		map.put("author", ne.getAuthor());
+		map.put("createDate", ne.getCreateDate());
+		map.put("contentList", list);
+		return new AppJson(map);
+	}
 }

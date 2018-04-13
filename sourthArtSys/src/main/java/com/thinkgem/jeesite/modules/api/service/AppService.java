@@ -14,11 +14,15 @@ import com.thinkgem.jeesite.common.utils.IdGen;
 import com.thinkgem.jeesite.common.utils.IdcardUtils;
 import com.thinkgem.jeesite.common.utils.PhoneUtils;
 import com.thinkgem.jeesite.modules.api.dao.AppDao;
+import com.thinkgem.jeesite.modules.api.entity.ArtVo;
+import com.thinkgem.jeesite.modules.api.entity.ArtWorksIndexPage;
 import com.thinkgem.jeesite.modules.api.entity.ArtWorksVo;
 import com.thinkgem.jeesite.modules.api.entity.CommentVo;
 import com.thinkgem.jeesite.modules.api.entity.MineArtWorks;
 import com.thinkgem.jeesite.modules.api.entity.MineWorksAndInterest;
 import com.thinkgem.jeesite.modules.api.entity.MsgCode;
+import com.thinkgem.jeesite.modules.api.entity.NewsInfoVo;
+import com.thinkgem.jeesite.modules.api.entity.NewsVo;
 import com.thinkgem.jeesite.modules.api.entity.UserDzVo;
 import com.thinkgem.jeesite.modules.api.entity.WxUser;
 import com.thinkgem.jeesite.modules.art.dao.ArtAuthDao;
@@ -408,4 +412,47 @@ public class AppService {
 		}
 		return false;
 	}
+	
+	/**
+	 * 首页获取作品列表
+	 */
+	public List<ArtWorksIndexPage> getIndexPage(ArtWorksIndexPage artWorksIndexPage){
+		return artWorksDao.getIndexPage(artWorksIndexPage);
+	}
+	
+	/**
+	 * 艺术名片
+	 */
+	public List<ArtVo> getArtList(String searchParam){
+		return appDao.getArtList(searchParam);
+	}
+	
+	
+	/**
+	 * 艺术家信息
+	 */
+	public ArtVo getArtInfo(String id){
+		return appDao.getArtInfo(id);
+	}
+	
+	
+	/**
+	 * 获取资讯
+	 */
+	public List<NewsVo> getNewsList(){
+		return appDao.getNewsList();
+	}
+	
+	public NewsVo getNewsById(String id){
+		return appDao.getNewsById(id);
+	}
+	
+	
+	/**
+	 * 获取资讯详情
+	 */
+	public List<NewsInfoVo> getNewsInfo(String newsId){
+		return appDao.getNewsInfo(newsId);
+	}
+	
 }

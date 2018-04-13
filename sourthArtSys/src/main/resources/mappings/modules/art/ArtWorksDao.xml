@@ -246,5 +246,84 @@
 			a.art_works_id = #{artWorksId} and a.parent IS NULL
 		AND a.create_by = b.id
 	</select>
+	<!-- 小程序首页 -->
+	<select id="getIndexPage" resultMap="ArtWorksPageMap">
+		SELECT
+			a.id,
+			a.model_type,
+			b.nick_name,
+			b.photo,
+			b.art_level,
+			b.art_type,
+			a.location,
+			a.create_date,
+			a.title,
+			CASE WHEN a.model_type='0' THEN (SELECT t.content FROM art_works_content t where t.art_works_id=a.id and t.file_type='0' LIMIT 0,1)
+				WHEN a.model_type='1' THEN (SELECT t.gif_url FROM art_works_content t where t.art_works_id=a.id and t.file_type='1' AND t.gif_url IS NOT NULL LIMIT 0,1)
+				ELSE (SELECT t.content FROM art_works_content t where t.art_works_id=a.id and t.file_type='2' LIMIT 0,1) END content,
+			a.dz_num,
+			CASE WHEN a.status='1' THEN (SELECT count(*) FROM art_works_comment v WHERE v.art_works_id=a.id)
+				ELSE 0 END  pl_num,
+			c.id c_id,
+			d.nick_name c_nick_name,
+			d.photo c_photo,
+			d.art_level c_art_level,
+			d.art_type c_art_type,
+			c.content c_content,
+			c.dz_num c_dz_num,
+			c.create_date c_create_date,
+			(SELECT count(*) FROM art_works_comment v WHERE v.parent=c.id) c_pl_num
+		FROM
+			art_works a
+		INNER JOIN sys_user b ON a.user_id = b.id
+		LEFT JOIN art_works_comment c ON a.id = c.art_works_id and c.status='1' and c.is_hot='1'
+		LEFT JOIN sys_user d ON c.create_by=d.id
+		<where>
+			a.status ='1' AND a.del_flag='0'
+			<if test="artTypeParam!='' and artTypeParam!='99' and artTypeParam!='88'">
+				AND a.art_type = #{artTypeParam}
+			</if>
+		</where>
+	</select>
+	<resultMap type="com.thinkgem.jeesite.modules.api.entity.ArtWorksIndexPage" id="ArtWorksPageMap">
+		<id column="id" property="id"/>
+		<result column="model_type" property="modelType"/>
+		<result column="nick_name" property="nickName"/>
+		<result column="photo" property="photo"/>
+		<result column="art_level" property="artLevel"/>
+		<result column="art_type" property="artType"/>
+		<result column="location" property="location"/>
+		<result column="create_date" property="createDate"/>
+		<result column="title" property="title"/>
+		<result column="content" property="content"/>
+		<result column="dz_num" property="dzNum"/>
+		<result column="pl_num" property="plNum"/>
+		<collection property="hotCommentList" ofType="com.thinkgem.jeesite.modules.api.entity.CommentVo">
+			<id column="c_id" property="id"/>
+			<result column="c_nick_name" property="nickName"/>
+			<result column="c_photo" property="photo"/>
+			<result column="c_art_level" property="artLevel"/>
+			<result column="c_art_type" property="artType"/>
+			<result column="c_create_date" property="createDate"/>
+			<result column="c_content" property="content"/>
+			<result column="c_dz_num" property="dzNum"/>
+			<result column="c_pl_num" property="msgNum"/>
+		</collection>
+	</resultMap>
 	
+	<select id="getArtWorksContentListToGif" resultType="com.thinkgem.jeesite.modules.art.entity.ArtWorksContent">
+		SELECT
+			a.id,
+			a.content,
+			a.file_type AS "fileType",
+			a.art_works_id AS "artWorksId",
+			a.gif_url AS "gifUrl"
+		FROM
+			art_works_content a
+		WHERE a.file_type = '1' AND a.gif_url IS NULL LIMIT 0,5
+	</select>
+	
+	<update id="updateArtWorksContentGifUrl">
+		UPDATE art_works_content SET gif_url = #{gifUrl} WHERE id = #{id}
+	</update>
 </mapper>

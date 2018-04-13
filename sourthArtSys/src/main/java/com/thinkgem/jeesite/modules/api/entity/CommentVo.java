@@ -117,6 +117,15 @@ public class CommentVo {
 			case "3":
 				type = "文学";
 				break;
+			case "4":
+				type = "舞蹈";
+				break;
+			case "5":
+				type = "音乐";
+				break;
+			case "6":
+				type = "戏剧";
+				break;	
 			default:
 				type = "未知";
 				break;
