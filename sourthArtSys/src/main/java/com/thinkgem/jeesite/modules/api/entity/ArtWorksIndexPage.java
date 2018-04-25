@@ -1,9 +1,11 @@
 package com.thinkgem.jeesite.modules.api.entity;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.thinkgem.jeesite.common.utils.DateUtils;
 import com.thinkgem.jeesite.common.utils.StringUtils;
 
 public class ArtWorksIndexPage {
@@ -23,7 +25,50 @@ public class ArtWorksIndexPage {
 	
 	//查询使用
 	private String artTypeParam;	//类型
+	private int pageNo = 1;
+	private int pageSize = 10;
+	private Date searchDate;
+	private int offset = 0;
+	private String searchDateStr;
 	
+	public String getSearchDateStr() {
+		return searchDateStr;
+	}
+	public void setSearchDateStr(String searchDateStr) {
+		this.searchDateStr = searchDateStr;
+	}
+	public int getOffset() {
+		offset = (this.pageNo-1)*pageSize;
+		return offset;
+	}
+	public void setOffset(int offset) {
+		this.offset = offset;
+	}
+	public int getPageNo() {
+		return pageNo;
+	}
+	public void setPageNo(int pageNo) {
+		this.pageNo = pageNo;
+	}
+	public int getPageSize() {
+		return pageSize;
+	}
+	public void setPageSize(int pageSize) {
+		this.pageSize = pageSize;
+	}
+	public Date getSearchDate() {
+		if(StringUtils.isNotBlank(searchDateStr)) {
+			try {
+				searchDate = DateUtils.parseDate(searchDateStr, "yyyy/MM/dd HH:mm:ss");
+			} catch (ParseException e) {
+				searchDate = new Date();
+			}
+		}
+		return searchDate;
+	}
+	public void setSearchDate(Date searchDate) {
+		this.searchDate = searchDate;
+	}
 	public ArtWorksIndexPage() {
 		
 	}

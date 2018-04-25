@@ -19,8 +19,8 @@ import com.thinkgem.jeesite.modules.art.service.ArtWorksService;
 /**
  * 系统定时任务
  */
-@Service
-@Lazy(false)
+//@Service
+//@Lazy(false)
 public class SysTaskJob {
 
 	
@@ -31,7 +31,7 @@ public class SysTaskJob {
 	/**
 	 * 将上传的视频，截取前几帧图片，生成GIF
 	 */
-	@Scheduled(cron="0/50 * * * * ?")
+//	@Scheduled(cron="0/50 * * * * ?")
 	public void jpgToGifJob() {
 		System.out.println("--------------将上传的视频，截取前几帧图片，生成GIF--------------------"+DateUtils.getDate("yyyy/MM/dd HH:mm:ss"));
 		

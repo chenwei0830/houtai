@@ -122,22 +122,11 @@ public class AppController {
 	 * @param orgId 组织机构ID
 	 */
 	@ResponseBody
-	@RequestMapping(value = {"v1/listHome/{artTypeParam}"},method = RequestMethod.GET)
-	public AppJson listHome(@PathVariable("artTypeParam") String artTypeParam) {
+	@RequestMapping(value = {"listHome"},method = RequestMethod.POST)
+	public AppJson listHome(@RequestBody ArtWorksIndexPage artWorksIndexPage) {
 		List<ArtWorksIndexPage> list = new ArrayList<ArtWorksIndexPage>();
 		//获取作品
-		if(StringUtils.isNoneBlank(artTypeParam)) {
-//			switch (artTypeParam) {
-//			case "99"://推荐
-//				break;
-//			case "88"://关注
-//				break;
-//			default://默认分类
-//				break;
-//			}
-			
-			list = appService.getIndexPage(new ArtWorksIndexPage(null,artTypeParam));
-		}
+		list = appService.getIndexPage(artWorksIndexPage);
 		
 		return new AppJson(list);
 	}

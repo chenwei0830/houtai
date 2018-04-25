@@ -283,6 +283,10 @@
 			<if test="artTypeParam!='' and artTypeParam!='99' and artTypeParam!='88'">
 				AND a.art_type = #{artTypeParam}
 			</if>
+			<if test="searchDate!=null">
+				AND a.create_date <![CDATA[<=]]>#{searchDate}
+			</if>
+			order by a.create_date DESC LIMIT #{offset},#{pageSize}
 		</where>
 	</select>
 	<resultMap type="com.thinkgem.jeesite.modules.api.entity.ArtWorksIndexPage" id="ArtWorksPageMap">
