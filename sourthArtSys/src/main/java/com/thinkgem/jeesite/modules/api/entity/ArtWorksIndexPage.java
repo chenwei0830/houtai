@@ -19,9 +19,13 @@ public class ArtWorksIndexPage {
 	private Date createDate;		//创建日期
 	private String title;			//标题
 	private String content;			//内容
+	private int viewNum;			//浏览量
 	private int dzNum;				//点赞
 	private int plNum;				//评论
 	private List<CommentVo> hotCommentList;		//热门评论
+	private int hasCollected;			//是否已收藏 0-否 1-是
+	private int hasDz;					//是否已点赞
+	private String openId;
 	
 	//查询使用
 	private String artTypeParam;	//类型
@@ -31,6 +35,24 @@ public class ArtWorksIndexPage {
 	private int offset = 0;
 	private String searchDateStr;
 	
+	public String getOpenId() {
+		return openId;
+	}
+	public void setOpenId(String openId) {
+		this.openId = openId;
+	}
+	public int getHasCollected() {
+		return hasCollected;
+	}
+	public void setHasCollected(int hasCollected) {
+		this.hasCollected = hasCollected;
+	}
+	public int getHasDz() {
+		return hasDz;
+	}
+	public void setHasDz(int hasDz) {
+		this.hasDz = hasDz;
+	}
 	public String getSearchDateStr() {
 		return searchDateStr;
 	}
@@ -196,5 +218,11 @@ public class ArtWorksIndexPage {
 	}
 	public void setHotCommentList(List<CommentVo> hotCommentList) {
 		this.hotCommentList = hotCommentList;
+	}
+	public int getViewNum() {
+		return viewNum;
+	}
+	public void setViewNum(int viewNum) {
+		this.viewNum = viewNum;
 	}
 }

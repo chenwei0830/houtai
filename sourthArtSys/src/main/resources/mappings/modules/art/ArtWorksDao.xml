@@ -206,8 +206,8 @@
 			CASE WHEN a.status='1' THEN (SELECT count(*) FROM art_works_comment v WHERE v.art_works_id=a.id)
 			ELSE 0 END AS "plNum",
 			a.create_date AS "createDate",
-			(select count(*) FROM user_artworks_collect b,sys_user c where b.user_id=c.id and b.art_works_id=#{id} and c.open_id=#{openId} ) AS "hasCollected",
-			(SELECT count(*) FROM user_dz_artworks d where d.user_id = a.user_id and d.art_works_id = a.id and d.del_flag='0') AS "hasDz"
+			(select count(*) FROM user_artworks_collect b,sys_user c where b.user_id=c.id and b.art_works_id=a.id and c.open_id=#{openId} ) AS "hasCollected",
+			(SELECT count(*) FROM user_dz_artworks d,sys_user c where d.user_id = c.id and d.art_works_id = a.id and c.open_id=#{openId} and d.del_flag='0') AS "hasDz"
 		FROM
 			art_works a
 		WHERE a.id = #{id}
@@ -262,8 +262,11 @@
 				WHEN a.model_type='1' THEN (SELECT t.gif_url FROM art_works_content t where t.art_works_id=a.id and t.file_type='1' AND t.gif_url IS NOT NULL LIMIT 0,1)
 				ELSE (SELECT t.content FROM art_works_content t where t.art_works_id=a.id and t.file_type='2' LIMIT 0,1) END content,
 			a.dz_num,
+			a.view_num,
 			CASE WHEN a.status='1' THEN (SELECT count(*) FROM art_works_comment v WHERE v.art_works_id=a.id)
 				ELSE 0 END  pl_num,
+			(select count(*) FROM user_artworks_collect b,sys_user c where b.user_id=c.id and b.art_works_id=a.id and c.open_id=#{openId} ) has_collected,
+			(SELECT count(*) FROM user_dz_artworks d,sys_user c where d.user_id = c.id and d.art_works_id = a.id and d.del_flag='0' and c.open_id=#{openId}) has_dz,
 			c.id c_id,
 			d.nick_name c_nick_name,
 			d.photo c_photo,
@@ -272,7 +275,7 @@
 			c.content c_content,
 			c.dz_num c_dz_num,
 			c.create_date c_create_date,
-			(SELECT count(*) FROM art_works_comment v WHERE v.parent=c.id) c_pl_num
+			(SELECT count(*) FROM art_works_comment v WHERE v.parent=c.id) c_pl_numm
 		FROM
 			art_works a
 		INNER JOIN sys_user b ON a.user_id = b.id
@@ -302,6 +305,9 @@
 		<result column="content" property="content"/>
 		<result column="dz_num" property="dzNum"/>
 		<result column="pl_num" property="plNum"/>
+		<result column="view_num" property="viewNum"/>
+		<result column="has_collected" property="hasCollected"/>
+		<result column="has_dz" property="hasDz"/>
 		<collection property="hotCommentList" ofType="com.thinkgem.jeesite.modules.api.entity.CommentVo">
 			<id column="c_id" property="id"/>
 			<result column="c_nick_name" property="nickName"/>
